@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "WebSearch",
+      "WebFetch(domain:mathjs.org)",
+      "Bash(npm create vite:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(lsof:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(tree:*)",
+      "Bash(npm install -D vitest)",
+      "Bash(npx vitest run:*)",
+      "Bash(git -C /Users/admin/Desktop/Projects/calculator-ultra status)",
+      "Bash(git -C /Users/admin/Desktop/Projects/calculator-ultra diff)"
+    ]
+  }
+}
