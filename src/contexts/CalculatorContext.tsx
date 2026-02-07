@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useReducer, useCallback, useEffect } from 'react';
 import { CalculatorState, CalculatorAction, HistoryEntry } from '../types/calculator';
 import { evaluateExpression, formatResult } from '../utils/mathOperations';
+import { sanitizeInput } from '../utils/expressionValidator';
 
 interface CalculatorContextType {
   state: CalculatorState;
@@ -52,7 +53,17 @@ const initialState: CalculatorState = {
 function calculatorReducer(state: CalculatorState, action: CalculatorAction): CalculatorState {
   switch (action.type) {
     case 'INPUT': {
-      const newExpression = state.expression + action.payload;
+      const sanitized = sanitizeInput(state.expression, action.payload);
+      if (sanitized === null) {
+        return state;
+      }
+      let newExpression: string;
+      if (sanitized.startsWith('\b')) {
+        // Replace last character
+        newExpression = state.expression.slice(0, -1) + sanitized.slice(1);
+      } else {
+        newExpression = state.expression + sanitized;
+      }
       return {
         ...state,
         expression: newExpression,
