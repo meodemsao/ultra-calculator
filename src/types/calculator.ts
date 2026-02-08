@@ -1,4 +1,4 @@
-export type CalculatorMode = 'basic' | 'scientific' | 'advanced' | 'units';
+export type CalculatorMode = 'basic' | 'scientific' | 'advanced' | 'units' | 'solver' | 'graph' | 'stats' | 'programming' | 'financial';
 
 export type AngleMode = 'DEG' | 'RAD';
 

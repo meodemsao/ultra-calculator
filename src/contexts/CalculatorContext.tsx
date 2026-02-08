@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useReducer, useCallback, useEffect } from 'react';
+import { createContext, useContext, ReactNode, useReducer, useCallback } from 'react';
 import { CalculatorState, CalculatorAction, HistoryEntry } from '../types/calculator';
 import { evaluateExpression, formatResult } from '../utils/mathOperations';
 import { sanitizeInput } from '../utils/expressionValidator';
@@ -206,21 +206,6 @@ function calculatorReducer(state: CalculatorState, action: CalculatorAction): Ca
 
 export function CalculatorProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(calculatorReducer, initialState);
-
-  // Live evaluation as user types
-  useEffect(() => {
-    if (state.expression && !state.error) {
-      try {
-        const result = evaluateExpression(state.expression, state.angleMode);
-        const formattedResult = formatResult(result);
-        if (formattedResult !== state.result) {
-          // We can't dispatch here to avoid loops, so we handle this differently
-        }
-      } catch {
-        // Ignore evaluation errors during typing
-      }
-    }
-  }, [state.expression, state.angleMode]);
 
   const input = useCallback((value: string) => {
     dispatch({ type: 'INPUT', payload: value });

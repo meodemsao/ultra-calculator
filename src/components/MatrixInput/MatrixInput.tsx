@@ -73,10 +73,11 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
         case 'multiply':
           resultMatrix = math.multiply(mA, math.matrix(matrixB));
           break;
-        case 'eigenvalues':
+        case 'eigenvalues': {
           const eigResult = math.eigs(mA);
           resultMatrix = eigResult.values;
           break;
+        }
         default:
           return;
       }

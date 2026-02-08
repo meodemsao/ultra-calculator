@@ -1,5 +1,15 @@
 import { CalculatorMode } from '../../types/calculator';
-import { Calculator, FlaskConical, Sigma, ArrowRightLeft } from 'lucide-react';
+import {
+  Calculator,
+  FlaskConical,
+  Sigma,
+  ArrowRightLeft,
+  Variable,
+  LineChart,
+  BarChart3,
+  Binary,
+  DollarSign,
+} from 'lucide-react';
 
 interface ModeSelectorProps {
   mode: CalculatorMode;
@@ -11,23 +21,28 @@ const modes: { id: CalculatorMode; label: string; icon: typeof Calculator }[] = 
   { id: 'scientific', label: 'Scientific', icon: FlaskConical },
   { id: 'advanced', label: 'Advanced', icon: Sigma },
   { id: 'units', label: 'Units', icon: ArrowRightLeft },
+  { id: 'solver', label: 'Solver', icon: Variable },
+  { id: 'graph', label: 'Graph', icon: LineChart },
+  { id: 'stats', label: 'Stats', icon: BarChart3 },
+  { id: 'programming', label: 'Programmer', icon: Binary },
+  { id: 'financial', label: 'Financial', icon: DollarSign },
 ];
 
 export function ModeSelector({ mode, onModeChange }: ModeSelectorProps) {
   return (
-    <div className="flex bg-gray-200 dark:bg-gray-800 rounded-xl p-1 mb-4">
+    <div className="flex bg-gray-200 dark:bg-gray-800 rounded-xl p-1 mb-4 overflow-x-auto scrollbar-hide">
       {modes.map(({ id, label, icon: Icon }) => (
         <button
           key={id}
           onClick={() => onModeChange(id)}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+          className={`flex-shrink-0 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
             mode === id
               ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
           <Icon size={16} />
-          <span className="hidden sm:inline">{label}</span>
+          <span className="hidden sm:inline whitespace-nowrap">{label}</span>
         </button>
       ))}
     </div>
