@@ -142,6 +142,7 @@ vite.config.ts.timestamp-*
 
 # AI Agent setup files and directories
 .agent/
+.agents/
 .claude/
 .gemini/
 CLAUDE.md
