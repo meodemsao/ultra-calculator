@@ -113,33 +113,150 @@ No component tests exist yet.
 - **Bundle size warning**: Production JS chunk is ~890KB (mathjs is large). Consider code-splitting or dynamic imports.
 - **Dead code in CalculatorContext**: `useEffect` at lines 211-223 attempts live evaluation but the result is never used (the `Display` component handles live preview independently via `useMemo`).
 
+## Feature Status
+
+### Implemented
+- [x] Basic arithmetic (+, -, *, /, =, %, parentheses)
+- [x] Scientific functions: sin, cos, tan, asin, acos, atan, log, ln, sqrt, cbrt, nthRoot, exp, mod, factorial, abs
+- [x] Constants: π, e
+- [x] DEG/RAD angle mode toggle
+- [x] 2nd function toggle (sin↔asin, cos↔acos, etc.)
+- [x] Memory register: M+, M-, MR, MC
+- [x] Power operations: x², x³, xʸ, 1/x
+- [x] Symbolic derivative (via mathjs)
+- [x] Numerical integral (Simpson's Rule, Trapezoidal)
+- [x] Matrix operations: determinant, inverse, transpose, eigenvalues, A+B, A-B, A×B
+- [x] Complex number input (a+bi)
+- [x] Unit converter (8 categories: Length, Weight, Temperature, Volume, Area, Speed, Time, Data Storage)
+- [x] Calculation history (localStorage, max 100 entries, restore from history)
+- [x] Dark/Light theme with localStorage persistence
+- [x] Keyboard shortcuts (numbers, operators, Enter, Backspace, Escape)
+- [x] Expression input validation and sanitization (implicit multiplication, operator rules)
+- [x] Live result preview while typing
+
+### Not Yet Implemented
+- [ ] Equation solver (quadratic, cubic, polynomial)
+- [ ] System of equations solver (2×2, 3×3, n×n linear systems)
+- [ ] Symbolic integration (antiderivative display)
+- [ ] Graphing / function plotting
+- [ ] Statistical plotting (histograms, scatter plots)
+- [ ] Programming mode (HEX, BIN, OCT, DEC, bitwise ops)
+- [ ] Statistics mode (data input, mean, median, mode, std dev, variance)
+- [ ] Regression analysis (linear, polynomial, exponential)
+- [ ] Hypothesis testing (t-test, z-test, chi-square)
+- [ ] Probability distributions (normal, binomial, Poisson)
+- [ ] TVM Solver (Time Value of Money: PV, FV, PMT, rate, periods)
+- [ ] High precision mode (arbitrary precision via BigNumber)
+- [ ] User-defined functions (define, store, recall custom f(x))
+- [ ] Hyperbolic functions (sinh, cosh, tanh, asinh, acosh, atanh)
+- [ ] Combinatorics: nPr (permutations), nCr (combinations)
+- [ ] GCD, LCM functions
+- [ ] Vector operations (dot product, cross product, magnitude)
+- [ ] Constants library (physics/chemistry: c, G, h, Nₐ, k, etc.)
+- [ ] Fraction ↔ Decimal toggle (S⇌D)
+- [ ] ENG notation display
+- [ ] Polar ↔ Rectangular conversion (Pol/Rec)
+- [ ] Ceil, Floor functions
+- [ ] Random numbers (Ran#, RanInt)
+- [ ] Ans / PreAns (use last answer / previous answer in expressions)
+- [ ] STO/RCL (store/recall named variables, beyond single memory)
+- [ ] Degrees/Minutes/Seconds (DMS) input and conversion
+- [ ] Copy/Paste result to clipboard
+- [ ] Limit computation
+- [ ] Multiple themes (beyond dark/light)
+- [ ] Unlimited history (remove 100-entry cap)
+- [ ] Cot, Cot⁻¹ (cotangent, inverse cotangent)
+
 ## Development Plan
 
-### Phase 1: Code Quality & Performance
+### Phase 1: Code Quality & Foundation
 - [ ] Remove dead `useEffect` in `CalculatorContext.tsx` (lines 211-223)
-- [ ] Code-split mathjs via dynamic import to reduce initial bundle size
+- [ ] Code-split mathjs via dynamic import to reduce initial bundle (~890KB)
 - [ ] Add component tests with React Testing Library
 - [ ] Set up ESLint config (currently no `.eslintrc`)
+- [ ] Refactor mode system to support new modes (Solver, Graph, Stats, Programming)
 
-### Phase 2: Feature Enhancements
-- [ ] Graph/plot mode - visualize functions using a canvas/SVG library
-- [ ] Equation solver (linear, quadratic, systems)
-- [ ] Programmer mode (hex, binary, octal conversions, bitwise ops)
-- [ ] Expression history navigation with arrow keys
-- [ ] Copy result to clipboard button
-- [ ] Export history as CSV/JSON
+### Phase 2: Core Scientific Enhancements
+Expand the scientific calculator to match full-featured scientific calculators.
 
-### Phase 3: UX Improvements
-- [ ] Haptic feedback on mobile
-- [ ] Button press animations (improve existing `btn-press`)
-- [ ] Swipe gestures for mode switching on mobile
-- [ ] Landscape layout optimization
-- [ ] PWA support (service worker, manifest, offline capability)
-- [ ] Accessibility audit (ARIA labels, focus management, screen reader support)
+- [ ] **Hyperbolic functions** — Add sinh, cosh, tanh, asinh, acosh, atanh to ScientificKeypad (via SHIFT/2nd)
+- [ ] **Cot / Cot⁻¹** — Add cotangent and inverse cotangent
+- [ ] **Combinatorics** — nPr, nCr buttons; implement via mathjs `permutations()`, `combinations()`
+- [ ] **GCD / LCM** — Add buttons; implement via mathjs `gcd()`, `lcm()`
+- [ ] **Ceil / Floor** — Add ceil(), floor() to available functions
+- [ ] **Random numbers** — Ran# (random 0-1), RanInt(a,b) (random integer in range)
+- [ ] **Ans / PreAns** — Store last result as `Ans`, previous as `PreAns`, usable in expressions
+- [ ] **STO / RCL** — Store values to named variables (A-F), recall in expressions
+- [ ] **Fraction ↔ Decimal toggle** — S⇌D: convert result between fraction and decimal display
+- [ ] **ENG notation** — Display results in engineering notation (exponents in multiples of 3)
+- [ ] **DMS input** — Degrees°Minutes'Seconds" input and conversion
+- [ ] **Polar ↔ Rectangular** — Pol(x,y)→(r,θ) and Rec(r,θ)→(x,y) conversions
+- [ ] **Constants library** — Modal with categorized physics/chemistry/math constants (speed of light, Planck's constant, Avogadro's number, gravitational constant, etc.)
+- [ ] **Copy / Paste** — Copy result to clipboard, paste into expression
+- [ ] **High precision mode** — Toggle arbitrary precision via mathjs BigNumber config
 
-### Phase 4: Advanced Math
-- [ ] Symbolic integration (display antiderivative, not just numerical result)
-- [ ] Limits computation
-- [ ] Taylor/Maclaurin series expansion
-- [ ] Statistics mode (mean, median, std dev, regression)
-- [ ] Probability (combinations, permutations, distributions)
+### Phase 3: Equation Solver Mode
+New calculator mode for solving equations.
+
+- [ ] **Quadratic solver** — Input a, b, c for ax²+bx+c=0, display real/complex roots, discriminant, vertex
+- [ ] **Cubic solver** — Input coefficients for ax³+bx²+cx+d=0
+- [ ] **Polynomial solver** — General nth-degree polynomial root finding
+- [ ] **System of linear equations** — 2×2, 3×3, up to n×n solver with coefficient matrix input
+- [ ] **Equation solver UI** — Dedicated tab/mode with coefficient input fields and formatted result display
+
+### Phase 4: Graphing & Plotting Mode
+New calculator mode for visualizing functions and data.
+
+- [ ] **Function plotter** — Plot y=f(x) on interactive canvas (pan, zoom, trace)
+- [ ] **Multiple functions** — Plot multiple f(x) simultaneously with different colors
+- [ ] **Trace mode** — Move cursor along graph, display (x, y) coordinates
+- [ ] **Table of values** — Generate x/y table for a function over a range
+- [ ] **Statistical plotting** — Histogram, scatter plot, box plot from data sets
+- [ ] **Graph library** — Evaluate: recharts, d3, or canvas-based custom renderer
+
+### Phase 5: Statistics & Probability Mode
+New calculator mode for statistical analysis.
+
+- [ ] **Data input** — Enter data sets (single-variable and two-variable)
+- [ ] **Descriptive statistics** — Mean, median, mode, std dev (σ and s), variance, min, max, quartiles, IQR
+- [ ] **Regression analysis** — Linear (ax+b), quadratic (ax²+bx+c), exponential (ae^bx), power (ax^b), logarithmic (a+b·ln(x)); display equation + r²
+- [ ] **Hypothesis testing** — z-test, t-test (1-sample, 2-sample), chi-square test; display test statistic, p-value, confidence interval
+- [ ] **Probability distributions** — Normal (PDF, CDF, inverse), Binomial (P(X=k), cumulative), Poisson; input parameters and compute probabilities
+- [ ] **Combinatorics in stats** — nPr, nCr integrated into stats workflows
+
+### Phase 6: Programming Mode
+New calculator mode for programmer/developer use.
+
+- [ ] **Number base display** — Show result simultaneously in DEC, HEX, OCT, BIN
+- [ ] **Base input** — Type numbers in any base (0x prefix for hex, 0b for binary, 0o for octal)
+- [ ] **Bitwise operations** — AND, OR, XOR, NOT, left shift (<<), right shift (>>)
+- [ ] **Word size toggle** — 8-bit, 16-bit, 32-bit, 64-bit; show overflow behavior
+- [ ] **ASCII/Unicode lookup** — Character ↔ code point conversion
+
+### Phase 7: Financial (TVM Solver)
+New calculator mode for financial calculations.
+
+- [ ] **TVM Solver** — Solve for any one of: N (periods), I% (interest rate), PV (present value), PMT (payment), FV (future value)
+- [ ] **Amortization schedule** — Generate payment breakdown table
+- [ ] **Compound interest** — Calculate with different compounding frequencies
+- [ ] **Currency converter** — Live exchange rates (optional, requires API)
+
+### Phase 8: Advanced Math
+Extend the advanced mathematics capabilities.
+
+- [ ] **Symbolic integration** — Display antiderivative expression, not just numerical result
+- [ ] **Limit computation** — Compute lim(x→a) f(x), including ±∞
+- [ ] **Taylor / Maclaurin series** — Expand f(x) around a point to nth order
+- [ ] **Vector operations** — Dot product, cross product, magnitude, unit vector, angle between vectors
+- [ ] **User-defined functions** — Define f(x)=..., save to localStorage, use in expressions
+
+### Phase 9: UX & Polish
+- [ ] **Multiple themes** — Add 4-6 color themes beyond dark/light (e.g., AMOLED black, solarized, high contrast, retro)
+- [ ] **Unlimited history** — Remove 100-entry cap, add search/filter in history
+- [ ] **Export history** — Export as CSV/JSON
+- [ ] **PWA support** — Service worker, manifest, offline capability, installable
+- [ ] **Haptic feedback** — Vibration on button press (mobile)
+- [ ] **Swipe gestures** — Swipe to switch modes on mobile
+- [ ] **Landscape layout** — Optimized two-panel layout in landscape orientation
+- [ ] **Accessibility** — Full ARIA labels, focus management, screen reader support, keyboard navigation for all modes
+- [ ] **SHIFT / ALPHA modifier keys** — Secondary and tertiary function layers on all buttons (like physical scientific calculators)
