@@ -9,28 +9,12 @@ import { History } from '../History/History';
 import { ModeSelector } from '../ModeSelector/ModeSelector';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 import { useKeyboard } from '../../hooks/useKeyboard';
-import { Menu, Variable, LineChart, BarChart3, Binary, DollarSign } from 'lucide-react';
-
-const comingSoonModes: Record<string, { icon: typeof Variable; label: string }> = {
-  solver: { icon: Variable, label: 'Equation Solver' },
-  graph: { icon: LineChart, label: 'Graphing' },
-  stats: { icon: BarChart3, label: 'Statistics' },
-  programming: { icon: Binary, label: 'Programmer' },
-  financial: { icon: DollarSign, label: 'Financial' },
-};
-
-function ComingSoon({ mode }: { mode: string }) {
-  const config = comingSoonModes[mode];
-  if (!config) return null;
-  const Icon = config.icon;
-  return (
-    <div className="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-      <Icon size={48} strokeWidth={1.5} />
-      <p className="mt-4 text-lg font-medium">{config.label}</p>
-      <p className="mt-1 text-sm">Coming soon</p>
-    </div>
-  );
-}
+import { EquationSolver } from '../EquationSolver/EquationSolver';
+import { GraphPlotter } from '../GraphPlotter/GraphPlotter';
+import { Statistics } from '../Statistics/Statistics';
+import { ProgrammerCalc } from '../ProgrammerCalc/ProgrammerCalc';
+import { FinancialCalc } from '../FinancialCalc/FinancialCalc';
+import { Menu } from 'lucide-react';
 
 export function Calculator() {
   const [mode, setMode] = useState<CalculatorMode>('basic');
@@ -89,7 +73,15 @@ export function Calculator() {
 
               {mode === 'units' && <UnitConverter />}
 
-              {mode in comingSoonModes && <ComingSoon mode={mode} />}
+              {mode === 'solver' && <EquationSolver />}
+
+              {mode === 'graph' && <GraphPlotter />}
+
+              {mode === 'stats' && <Statistics />}
+
+              {mode === 'programming' && <ProgrammerCalc />}
+
+              {mode === 'financial' && <FinancialCalc />}
             </div>
 
             {/* Keyboard hint */}

@@ -45,18 +45,29 @@ describe('Calculator', () => {
     expect(screen.getByText('=')).toBeInTheDocument();
   });
 
-  it('switches to a coming-soon mode', async () => {
+  it('switches to financial mode and renders financial calc', async () => {
     const user = userEvent.setup();
     renderCalculator();
 
-    // Click the Solver button (5th mode button)
+    const modeButtons = screen.getAllByRole('button');
+    const finButton = modeButtons.find(btn => btn.textContent?.includes('Financial'));
+    expect(finButton).toBeDefined();
+    await user.click(finButton!);
+
+    expect(screen.getByText('TVM Solver')).toBeInTheDocument();
+  });
+
+  it('switches to solver mode and renders equation solver', async () => {
+    const user = userEvent.setup();
+    renderCalculator();
+
     const modeButtons = screen.getAllByRole('button');
     const solverButton = modeButtons.find(btn => btn.textContent?.includes('Solver'));
     expect(solverButton).toBeDefined();
     await user.click(solverButton!);
 
-    expect(screen.getByText('Equation Solver')).toBeInTheDocument();
-    expect(screen.getByText('Coming soon')).toBeInTheDocument();
+    expect(screen.getByText('ax²+bx+c')).toBeInTheDocument();
+    expect(screen.getByText('Linear System')).toBeInTheDocument();
   });
 
   it('shows keyboard hint', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateExpression, formatResult } from './mathOperations';
+import { evaluateExpression, formatResult, toFraction } from './mathOperations';
 
 describe('evaluateExpression', () => {
   describe('basic arithmetic', () => {
@@ -158,6 +158,155 @@ describe('evaluateExpression', () => {
     });
   });
 
+  describe('cotangent functions', () => {
+    it('evaluates cot(45) = 1 in DEG mode', () => {
+      const result = parseFloat(evaluateExpression('cot(45)', 'DEG'));
+      expect(result).toBeCloseTo(1, 10);
+    });
+
+    it('evaluates cot(pi/4) ≈ 1 in RAD mode', () => {
+      const result = parseFloat(evaluateExpression('cot(pi/4)', 'RAD'));
+      expect(result).toBeCloseTo(1, 10);
+    });
+
+    it('evaluates acot(1) = 45 in DEG mode', () => {
+      const result = parseFloat(evaluateExpression('acot(1)', 'DEG'));
+      expect(result).toBeCloseTo(45, 6);
+    });
+
+    it('evaluates acot(1) = pi/4 in RAD mode', () => {
+      const result = parseFloat(evaluateExpression('acot(1)', 'RAD'));
+      expect(result).toBeCloseTo(Math.PI / 4, 10);
+    });
+  });
+
+  describe('hyperbolic functions', () => {
+    it('evaluates sinh(0) = 0', () => {
+      const result = parseFloat(evaluateExpression('sinh(0)', 'RAD'));
+      expect(result).toBeCloseTo(0, 10);
+    });
+
+    it('evaluates cosh(0) = 1', () => {
+      const result = parseFloat(evaluateExpression('cosh(0)', 'RAD'));
+      expect(result).toBeCloseTo(1, 10);
+    });
+
+    it('evaluates tanh(0) = 0', () => {
+      const result = parseFloat(evaluateExpression('tanh(0)', 'RAD'));
+      expect(result).toBeCloseTo(0, 10);
+    });
+
+    it('evaluates sinh(1) correctly', () => {
+      const result = parseFloat(evaluateExpression('sinh(1)', 'RAD'));
+      expect(result).toBeCloseTo(Math.sinh(1), 10);
+    });
+
+    it('evaluates cosh(1) correctly', () => {
+      const result = parseFloat(evaluateExpression('cosh(1)', 'RAD'));
+      expect(result).toBeCloseTo(Math.cosh(1), 10);
+    });
+
+    it('evaluates tanh(1) correctly', () => {
+      const result = parseFloat(evaluateExpression('tanh(1)', 'RAD'));
+      expect(result).toBeCloseTo(Math.tanh(1), 10);
+    });
+
+    it('evaluates asinh(0) = 0', () => {
+      const result = parseFloat(evaluateExpression('asinh(0)', 'RAD'));
+      expect(result).toBeCloseTo(0, 10);
+    });
+
+    it('evaluates acosh(1) = 0', () => {
+      const result = parseFloat(evaluateExpression('acosh(1)', 'RAD'));
+      expect(result).toBeCloseTo(0, 10);
+    });
+
+    it('evaluates atanh(0) = 0', () => {
+      const result = parseFloat(evaluateExpression('atanh(0)', 'RAD'));
+      expect(result).toBeCloseTo(0, 10);
+    });
+
+    it('hyperbolic functions are not affected by DEG mode', () => {
+      const degResult = parseFloat(evaluateExpression('sinh(1)', 'DEG'));
+      const radResult = parseFloat(evaluateExpression('sinh(1)', 'RAD'));
+      expect(degResult).toBeCloseTo(radResult, 10);
+    });
+  });
+
+  describe('combinatorics', () => {
+    it('evaluates permutations(5,2) = 20', () => {
+      expect(evaluateExpression('permutations(5,2)', 'DEG')).toBe('20');
+    });
+
+    it('evaluates combinations(5,2) = 10', () => {
+      expect(evaluateExpression('combinations(5,2)', 'DEG')).toBe('10');
+    });
+
+    it('evaluates combinations(10,3) = 120', () => {
+      expect(evaluateExpression('combinations(10,3)', 'DEG')).toBe('120');
+    });
+
+    it('evaluates permutations(4,4) = 24', () => {
+      expect(evaluateExpression('permutations(4,4)', 'DEG')).toBe('24');
+    });
+  });
+
+  describe('GCD and LCM', () => {
+    it('evaluates gcd(12,8) = 4', () => {
+      expect(evaluateExpression('gcd(12,8)', 'DEG')).toBe('4');
+    });
+
+    it('evaluates lcm(4,6) = 12', () => {
+      expect(evaluateExpression('lcm(4,6)', 'DEG')).toBe('12');
+    });
+
+    it('evaluates gcd(100,75) = 25', () => {
+      expect(evaluateExpression('gcd(100,75)', 'DEG')).toBe('25');
+    });
+
+    it('evaluates lcm(3,5) = 15', () => {
+      expect(evaluateExpression('lcm(3,5)', 'DEG')).toBe('15');
+    });
+  });
+
+  describe('ceil and floor', () => {
+    it('evaluates ceil(3.2) = 4', () => {
+      expect(evaluateExpression('ceil(3.2)', 'DEG')).toBe('4');
+    });
+
+    it('evaluates floor(3.8) = 3', () => {
+      expect(evaluateExpression('floor(3.8)', 'DEG')).toBe('3');
+    });
+
+    it('evaluates ceil(-2.3) = -2', () => {
+      expect(evaluateExpression('ceil(-2.3)', 'DEG')).toBe('-2');
+    });
+
+    it('evaluates floor(-2.3) = -3', () => {
+      expect(evaluateExpression('floor(-2.3)', 'DEG')).toBe('-3');
+    });
+
+    it('evaluates ceil(5) = 5', () => {
+      expect(evaluateExpression('ceil(5)', 'DEG')).toBe('5');
+    });
+
+    it('evaluates floor(5) = 5', () => {
+      expect(evaluateExpression('floor(5)', 'DEG')).toBe('5');
+    });
+  });
+
+  describe('randomInt', () => {
+    it('evaluates randomInt to an integer within range', () => {
+      const result = parseInt(evaluateExpression('randomInt(1,10)', 'DEG'));
+      expect(result).toBeGreaterThanOrEqual(1);
+      expect(result).toBeLessThanOrEqual(10);
+    });
+
+    it('evaluates randomInt(5,5) = 5', () => {
+      expect(evaluateExpression('randomInt(5,5)', 'DEG')).toBe('5');
+    });
+  });
+
   describe('error handling', () => {
     it('throws on invalid expression', () => {
       expect(() => evaluateExpression('2+*3', 'DEG')).toThrow();
@@ -192,5 +341,35 @@ describe('formatResult', () => {
 
   it('rounds to avoid floating point issues', () => {
     expect(formatResult('0.1000000000001')).toBe('0.1');
+  });
+});
+
+describe('toFraction', () => {
+  it('converts 0.5 to 1/2', () => {
+    expect(toFraction('0.5')).toBe('1/2');
+  });
+
+  it('converts 0.25 to 1/4', () => {
+    expect(toFraction('0.25')).toBe('1/4');
+  });
+
+  it('converts 0.333... to 1/3', () => {
+    expect(toFraction('0.3333333333')).toBe('1/3');
+  });
+
+  it('returns integers as-is', () => {
+    expect(toFraction('5')).toBe('5');
+  });
+
+  it('converts 1.5 to 3/2', () => {
+    expect(toFraction('1.5')).toBe('3/2');
+  });
+
+  it('returns non-numeric strings as-is', () => {
+    expect(toFraction('abc')).toBe('abc');
+  });
+
+  it('handles negative fractions', () => {
+    expect(toFraction('-0.5')).toBe('-1/2');
   });
 });

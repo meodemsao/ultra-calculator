@@ -44,6 +44,11 @@ export const scientificButtons: ButtonConfig[] = [
   { label: 'sin', value: 'sin(', type: 'function', secondLabel: 'sin⁻¹', secondValue: 'asin(' },
   { label: 'cos', value: 'cos(', type: 'function', secondLabel: 'cos⁻¹', secondValue: 'acos(' },
   { label: 'tan', value: 'tan(', type: 'function', secondLabel: 'tan⁻¹', secondValue: 'atan(' },
+  { label: 'cot', value: 'cot(', type: 'function', secondLabel: 'cot⁻¹', secondValue: 'acot(' },
+
+  { label: 'sinh', value: 'sinh(', type: 'function', secondLabel: 'sinh⁻¹', secondValue: 'asinh(' },
+  { label: 'cosh', value: 'cosh(', type: 'function', secondLabel: 'cosh⁻¹', secondValue: 'acosh(' },
+  { label: 'tanh', value: 'tanh(', type: 'function', secondLabel: 'tanh⁻¹', secondValue: 'atanh(' },
   { label: 'log', value: 'log10(', type: 'function', secondLabel: '10ˣ', secondValue: '10^' },
 
   { label: 'ln', value: 'log(', type: 'function', secondLabel: 'eˣ', secondValue: 'e^' },
@@ -60,6 +65,11 @@ export const scientificButtons: ButtonConfig[] = [
   { label: 'ⁿ√', value: 'nthRoot(', type: 'function' },
   { label: 'exp', value: 'exp(', type: 'function' },
   { label: 'mod', value: ' mod ', type: 'operator' },
+
+  { label: 'nPr', value: 'permutations(', type: 'function', secondLabel: 'nCr', secondValue: 'combinations(' },
+  { label: 'gcd', value: 'gcd(', type: 'function', secondLabel: 'lcm', secondValue: 'lcm(' },
+  { label: '⌈x⌉', value: 'ceil(', type: 'function', secondLabel: '⌊x⌋', secondValue: 'floor(' },
+  { label: 'Ran#', value: 'random()', type: 'function', secondLabel: 'RanInt', secondValue: 'randomInt(' },
 ];
 
 export const advancedButtons: ButtonConfig[] = [

@@ -20,6 +20,9 @@ interface CalculatorContextType {
   restoreFromHistory: (entry: HistoryEntry) => void;
   clearHistory: () => void;
   setExpression: (expr: string) => void;
+  storeVariable: (name: string) => void;
+  recallVariable: (name: string) => void;
+  toggleFractionDisplay: () => void;
 }
 
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
@@ -48,6 +51,10 @@ const initialState: CalculatorState = {
   angleMode: 'DEG',
   isSecondFunction: false,
   error: null,
+  lastAnswer: '',
+  prevAnswer: '',
+  variables: {},
+  displayAsFraction: false,
 };
 
 function calculatorReducer(state: CalculatorState, action: CalculatorAction): CalculatorState {
@@ -105,7 +112,19 @@ function calculatorReducer(state: CalculatorState, action: CalculatorAction): Ca
         return state;
       }
       try {
-        const result = evaluateExpression(state.expression, state.angleMode);
+        // Replace Ans and PreAns tokens with their values
+        let evalExpr = state.expression;
+        if (state.lastAnswer) {
+          evalExpr = evalExpr.replace(/\bAns\b/g, `(${state.lastAnswer})`);
+        }
+        if (state.prevAnswer) {
+          evalExpr = evalExpr.replace(/\bPreAns\b/g, `(${state.prevAnswer})`);
+        }
+        // Replace variable names (A-F) with their values
+        for (const [name, value] of Object.entries(state.variables)) {
+          evalExpr = evalExpr.replace(new RegExp(`\\b${name}\\b`, 'g'), `(${value})`);
+        }
+        const result = evaluateExpression(evalExpr, state.angleMode);
         const formattedResult = formatResult(result);
         const historyEntry: HistoryEntry = {
           id: Date.now().toString(),
@@ -120,6 +139,9 @@ function calculatorReducer(state: CalculatorState, action: CalculatorAction): Ca
           result: formattedResult,
           history: newHistory,
           error: null,
+          prevAnswer: state.lastAnswer,
+          lastAnswer: formattedResult,
+          displayAsFraction: false,
         };
       } catch (error) {
         return {
@@ -199,6 +221,33 @@ function calculatorReducer(state: CalculatorState, action: CalculatorAction): Ca
       };
     }
 
+    case 'STORE_VARIABLE': {
+      const varName = action.payload;
+      const valueToStore = state.result || '0';
+      return {
+        ...state,
+        variables: { ...state.variables, [varName]: valueToStore },
+      };
+    }
+
+    case 'RECALL_VARIABLE': {
+      const recallName = action.payload;
+      const recalledValue = state.variables[recallName];
+      if (recalledValue !== undefined) {
+        return {
+          ...state,
+          expression: state.expression + recalledValue,
+        };
+      }
+      return state;
+    }
+
+    case 'TOGGLE_FRACTION_DISPLAY':
+      return {
+        ...state,
+        displayAsFraction: !state.displayAsFraction,
+      };
+
     default:
       return state;
   }
@@ -263,6 +312,18 @@ export function CalculatorProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_EXPRESSION', payload: expr });
   }, []);
 
+  const storeVariable = useCallback((name: string) => {
+    dispatch({ type: 'STORE_VARIABLE', payload: name });
+  }, []);
+
+  const recallVariable = useCallback((name: string) => {
+    dispatch({ type: 'RECALL_VARIABLE', payload: name });
+  }, []);
+
+  const toggleFractionDisplay = useCallback(() => {
+    dispatch({ type: 'TOGGLE_FRACTION_DISPLAY' });
+  }, []);
+
   return (
     <CalculatorContext.Provider
       value={{
@@ -282,6 +343,9 @@ export function CalculatorProvider({ children }: { children: ReactNode }) {
         restoreFromHistory,
         clearHistory,
         setExpression,
+        storeVariable,
+        recallVariable,
+        toggleFractionDisplay,
       }}
     >
       {children}

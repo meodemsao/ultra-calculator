@@ -1,23 +1,31 @@
+import { useState } from 'react';
 import { useCalculator } from '../../contexts/CalculatorContext';
 import { Button } from './Button';
 import { scientificButtons } from '../../constants/buttons';
+import { ConstantsLibrary } from '../ConstantsLibrary/ConstantsLibrary';
 
 export function ScientificKeypad() {
-  const { input, toggleAngleMode, toggleSecondFunction, state } = useCalculator();
+  const { input, toggleAngleMode, toggleSecondFunction, state, dispatch } = useCalculator();
   const { isSecondFunction, angleMode } = state;
+  const [showConstants, setShowConstants] = useState(false);
 
   const handleButtonClick = (btn: typeof scientificButtons[0]) => {
-    if (isSecondFunction && btn.secondValue) {
-      input(btn.secondValue);
-    } else {
-      input(btn.value);
+    const value = isSecondFunction && btn.secondValue ? btn.secondValue : btn.value;
+
+    // random() produces a value directly, insert it as a result
+    if (value === 'random()') {
+      const rand = Math.random();
+      dispatch({ type: 'SET_EXPRESSION', payload: state.expression + rand.toString() });
+      return;
     }
+
+    input(value);
   };
 
   return (
     <div className="space-y-3">
       {/* Mode toggles */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <Button
           label={angleMode}
           variant="function"
@@ -29,6 +37,12 @@ export function ScientificKeypad() {
           variant="function"
           onClick={toggleSecondFunction}
           active={isSecondFunction}
+          className="h-10"
+        />
+        <Button
+          label="Const"
+          variant="function"
+          onClick={() => setShowConstants(true)}
           className="h-10"
         />
       </div>
@@ -45,6 +59,16 @@ export function ScientificKeypad() {
           />
         ))}
       </div>
+
+      {showConstants && (
+        <ConstantsLibrary
+          onSelect={(value) => {
+            input(value);
+            setShowConstants(false);
+          }}
+          onClose={() => setShowConstants(false)}
+        />
+      )}
     </div>
   );
 }

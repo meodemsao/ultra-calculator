@@ -1,12 +1,18 @@
 const BINARY_OPERATORS = ['+', '-', '*', '/', '^', '%'];
 const STRICT_BINARY_OPERATORS = ['*', '/', '^', '%']; // no unary form
 const FUNCTIONS = [
-  'sin(', 'cos(', 'tan(',
-  'asin(', 'acos(', 'atan(',
+  'sin(', 'cos(', 'tan(', 'cot(',
+  'asin(', 'acos(', 'atan(', 'acot(',
+  'sinh(', 'cosh(', 'tanh(',
+  'asinh(', 'acosh(', 'atanh(',
   'log(', 'log10(',
   'sqrt(', 'cbrt(',
   'abs(', 'factorial(',
   'exp(', 'nthRoot(',
+  'permutations(', 'combinations(',
+  'gcd(', 'lcm(',
+  'ceil(', 'floor(',
+  'randomInt(',
 ];
 const CONSTANTS = ['pi', 'e'];
 

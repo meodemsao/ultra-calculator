@@ -3,6 +3,19 @@ import { AngleMode } from '../types/calculator';
 
 const math = create(all) as MathJsStatic;
 
+// Register cot and acot as custom functions
+math.import({
+  cot: function (x: number) {
+    return 1 / Math.tan(x);
+  },
+  acot: function (x: number) {
+    return Math.atan(1 / x);
+  },
+  randomInt: function (a: number, b: number) {
+    return Math.floor(Math.random() * (b - a + 1)) + a;
+  },
+}, { override: true });
+
 export function evaluateExpression(expression: string, angleMode: AngleMode): string {
   try {
     if (!expression.trim()) {
@@ -21,12 +34,14 @@ export function evaluateExpression(expression: string, angleMode: AngleMode): st
     if (angleMode === 'DEG') {
       // Handle inverse trig first - convert result from radians to degrees
       processedExpr = processedExpr
+        .replace(/acot\(/g, '(180/pi)*acot(')
         .replace(/asin\(/g, '(180/pi)*asin(')
         .replace(/acos\(/g, '(180/pi)*acos(')
         .replace(/atan\(/g, '(180/pi)*atan(');
 
       // Convert degrees to radians for forward trig (negative lookbehind to skip inverse trig)
       processedExpr = processedExpr
+        .replace(/(?<!a)cot\(/g, 'cot(pi/180*')
         .replace(/(?<!a)sin\(/g, 'sin(pi/180*')
         .replace(/(?<!a)cos\(/g, 'cos(pi/180*')
         .replace(/(?<!a)tan\(/g, 'tan(pi/180*');
@@ -74,6 +89,22 @@ export function formatResult(result: string): string {
   // Round to avoid floating point display issues
   const rounded = Math.round(num * 1e10) / 1e10;
   return String(rounded);
+}
+
+export function toFraction(result: string): string {
+  const num = parseFloat(result);
+  if (isNaN(num) || !isFinite(num)) {
+    return result;
+  }
+  if (Number.isInteger(num)) {
+    return result;
+  }
+  try {
+    const fraction = math.fraction(num);
+    return math.format(fraction, { fraction: 'ratio' });
+  } catch {
+    return result;
+  }
 }
 
 export { math };

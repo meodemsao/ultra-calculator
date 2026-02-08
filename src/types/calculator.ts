@@ -10,6 +10,10 @@ export interface CalculatorState {
   angleMode: AngleMode;
   isSecondFunction: boolean;
   error: string | null;
+  lastAnswer: string;
+  prevAnswer: string;
+  variables: Record<string, string>;
+  displayAsFraction: boolean;
 }
 
 export interface HistoryEntry {
@@ -34,7 +38,10 @@ export type CalculatorAction =
   | { type: 'SET_EXPRESSION'; payload: string }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'RESTORE_FROM_HISTORY'; payload: HistoryEntry }
-  | { type: 'CLEAR_HISTORY' };
+  | { type: 'CLEAR_HISTORY' }
+  | { type: 'STORE_VARIABLE'; payload: string }
+  | { type: 'RECALL_VARIABLE'; payload: string }
+  | { type: 'TOGGLE_FRACTION_DISPLAY' };
 
 export interface ButtonConfig {
   label: string;
