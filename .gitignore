@@ -146,3 +146,6 @@ vite.config.ts.timestamp-*
 .gemini/
 CLAUDE.md
 GEMINI.md
+
+# macOS system files
+.DS_Store
