@@ -175,8 +175,8 @@ describe('sanitizeInput', () => {
       expect(sanitizeInput('5', 'sin(')).toBe('*sin(');
     });
 
-    it('inserts * between constant and sqrt(', () => {
-      expect(sanitizeInput('pi', 'sqrt(')).toBe('*sqrt(');
+    it('inserts * between constant and log10(', () => {
+      expect(sanitizeInput('pi', 'log10(')).toBe('*log10(');
     });
 
     it('does not insert * after operator', () => {
@@ -235,6 +235,41 @@ describe('sanitizeInput', () => {
 
     it('allows function after (', () => {
       expect(sanitizeInput('(', 'sin(')).toBe('sin(');
+    });
+  });
+
+  // Root prefix operators (√, ∛)
+  describe('Root prefix operators', () => {
+    it('allows √ at start', () => {
+      expect(sanitizeInput('', '√')).toBe('√');
+    });
+
+    it('allows ∛ at start', () => {
+      expect(sanitizeInput('', '∛')).toBe('∛');
+    });
+
+    it('inserts * between digit and √', () => {
+      expect(sanitizeInput('2', '√')).toBe('*√');
+    });
+
+    it('inserts * between digit and ∛', () => {
+      expect(sanitizeInput('5', '∛')).toBe('*∛');
+    });
+
+    it('inserts * between ) and √', () => {
+      expect(sanitizeInput('(3+2)', '√')).toBe('*√');
+    });
+
+    it('inserts * between constant and √', () => {
+      expect(sanitizeInput('pi', '√')).toBe('*√');
+    });
+
+    it('allows √ after operator', () => {
+      expect(sanitizeInput('3+', '√')).toBe('√');
+    });
+
+    it('allows √ after (', () => {
+      expect(sanitizeInput('(', '√')).toBe('√');
     });
   });
 });

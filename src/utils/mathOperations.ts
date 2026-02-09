@@ -16,6 +16,112 @@ math.import({
   },
 }, { override: true });
 
+const KNOWN_FUNCTIONS = [
+  'sin', 'cos', 'tan', 'cot',
+  'asin', 'acos', 'atan', 'acot',
+  'sinh', 'cosh', 'tanh',
+  'asinh', 'acosh', 'atanh',
+  'log', 'log10',
+  'sqrt', 'cbrt',
+  'abs', 'factorial',
+  'exp', 'nthRoot',
+  'permutations', 'combinations',
+  'gcd', 'lcm',
+  'ceil', 'floor',
+  'randomInt',
+];
+
+/**
+ * Extract the next "term" starting at position `i` in the expression.
+ * Returns the end index (exclusive) of the term.
+ *
+ * A term is one of:
+ * 1. A parenthesized group: (...) — find matching close paren
+ * 2. A root prefix (√ or ∛) — recursively extract its term
+ * 3. A function call: name(...) — consume name + matching parens
+ * 4. A constant: pi or e
+ * 5. A number: digits and dots
+ */
+function extractTermEnd(expr: string, i: number): number {
+  if (i >= expr.length) return i;
+
+  const ch = expr[i];
+
+  // 1. Parenthesized group
+  if (ch === '(') {
+    let depth = 1;
+    let j = i + 1;
+    while (j < expr.length && depth > 0) {
+      if (expr[j] === '(') depth++;
+      if (expr[j] === ')') depth--;
+      j++;
+    }
+    return j;
+  }
+
+  // 2. Another root prefix (recursive)
+  if (ch === '√' || ch === '∛') {
+    return extractTermEnd(expr, i + 1);
+  }
+
+  // 3. Function call: name followed by (
+  for (const fn of KNOWN_FUNCTIONS) {
+    if (expr.startsWith(fn + '(', i)) {
+      // Skip the function name, then extract the parenthesized group
+      return extractTermEnd(expr, i + fn.length);
+    }
+  }
+
+  // 4. Constant: pi or e (check pi first to avoid matching just 'e' in a number)
+  if (expr.startsWith('pi', i)) {
+    return i + 2;
+  }
+  if (ch === 'e' && (i + 1 >= expr.length || !/[a-z]/i.test(expr[i + 1]))) {
+    return i + 1;
+  }
+
+  // 5. Number: digits and dots
+  if ((ch >= '0' && ch <= '9') || ch === '.') {
+    let j = i;
+    while (j < expr.length && ((expr[j] >= '0' && expr[j] <= '9') || expr[j] === '.')) {
+      j++;
+    }
+    return j;
+  }
+
+  // Fallback: single character
+  return i + 1;
+}
+
+/**
+ * Convert √ and ∛ prefix operators into sqrt(...) and cbrt(...) function calls.
+ */
+export function preprocessRootOperators(expr: string): string {
+  let result = '';
+  let i = 0;
+  while (i < expr.length) {
+    const ch = expr[i];
+    if (ch === '√' || ch === '∛') {
+      const fnName = ch === '√' ? 'sqrt' : 'cbrt';
+      const termEnd = extractTermEnd(expr, i + 1);
+      const term = expr.slice(i + 1, termEnd);
+      // Recursively preprocess the term in case it contains more root symbols
+      const processedTerm = preprocessRootOperators(term);
+      // If term already starts with '(', don't double-wrap
+      if (processedTerm.startsWith('(')) {
+        result += fnName + processedTerm;
+      } else {
+        result += fnName + '(' + processedTerm + ')';
+      }
+      i = termEnd;
+    } else {
+      result += ch;
+      i++;
+    }
+  }
+  return result;
+}
+
 export function evaluateExpression(expression: string, angleMode: AngleMode): string {
   try {
     if (!expression.trim()) {
@@ -26,6 +132,9 @@ export function evaluateExpression(expression: string, angleMode: AngleMode): st
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
       .replace(/−/g, '-');
+
+    // Convert √/∛ prefix operators to sqrt()/cbrt() function calls
+    processedExpr = preprocessRootOperators(processedExpr);
 
     // Handle percentage
     processedExpr = processedExpr.replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');

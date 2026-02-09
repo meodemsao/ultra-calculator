@@ -6,7 +6,6 @@ const FUNCTIONS = [
   'sinh(', 'cosh(', 'tanh(',
   'asinh(', 'acosh(', 'atanh(',
   'log(', 'log10(',
-  'sqrt(', 'cbrt(',
   'abs(', 'factorial(',
   'exp(', 'nthRoot(',
   'permutations(', 'combinations(',
@@ -15,6 +14,7 @@ const FUNCTIONS = [
   'randomInt(',
 ];
 const CONSTANTS = ['pi', 'e'];
+const ROOT_PREFIXES = ['√', '∛'];
 
 function isDigit(ch: string): boolean {
   return ch >= '0' && ch <= '9';
@@ -58,6 +58,7 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
   const isNewFunction = FUNCTIONS.includes(newInput);
   const isNewConstant = CONSTANTS.includes(newInput);
   const isNewMod = newInput === ' mod ';
+  const isNewRootPrefix = ROOT_PREFIXES.includes(newInput);
 
   // Rule 5: Prevent strict binary operator at start (*, /, ^, %)
   if (expr === '' && newInput.length === 1 && isStrictBinaryOperator(newInput)) {
@@ -135,14 +136,14 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
     if (isNewDigit || isNewConstant) {
       return '*' + newInput;
     }
-    if (isNewFunction) {
+    if (isNewFunction || isNewRootPrefix) {
       return '*' + newInput;
     }
     // ) followed by ( is handled by Rule 1 above
   }
 
-  // Rule 10: Implicit multiplication before functions
-  if (isNewFunction) {
+  // Rule 10: Implicit multiplication before functions and root prefixes
+  if (isNewFunction || isNewRootPrefix) {
     if (lastChar !== '' && (isDigit(lastChar) || endsWithConstant(expr))) {
       return '*' + newInput;
     }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateExpression, formatResult, toFraction } from './mathOperations';
+import { evaluateExpression, formatResult, toFraction, preprocessRootOperators } from './mathOperations';
 
 describe('evaluateExpression', () => {
   describe('basic arithmetic', () => {
@@ -371,5 +371,95 @@ describe('toFraction', () => {
 
   it('handles negative fractions', () => {
     expect(toFraction('-0.5')).toBe('-1/2');
+  });
+});
+
+describe('preprocessRootOperators', () => {
+  it('converts √ with number', () => {
+    expect(preprocessRootOperators('√25')).toBe('sqrt(25)');
+  });
+
+  it('converts ∛ with number', () => {
+    expect(preprocessRootOperators('∛8')).toBe('cbrt(8)');
+  });
+
+  it('converts √ with parenthesized group', () => {
+    expect(preprocessRootOperators('√(25+3)')).toBe('sqrt(25+3)');
+  });
+
+  it('converts √ with constant pi', () => {
+    expect(preprocessRootOperators('√pi')).toBe('sqrt(pi)');
+  });
+
+  it('converts √ with constant e', () => {
+    expect(preprocessRootOperators('√e')).toBe('sqrt(e)');
+  });
+
+  it('converts √ with function call', () => {
+    expect(preprocessRootOperators('√sin(30)')).toBe('sqrt(sin(30))');
+  });
+
+  it('converts nested √√', () => {
+    expect(preprocessRootOperators('√√16')).toBe('sqrt(sqrt(16))');
+  });
+
+  it('preserves operators after root term', () => {
+    expect(preprocessRootOperators('√25+3')).toBe('sqrt(25)+3');
+  });
+
+  it('handles multiplication with root', () => {
+    expect(preprocessRootOperators('2*√9')).toBe('2*sqrt(9)');
+  });
+
+  it('handles multiple root operators', () => {
+    expect(preprocessRootOperators('√4+√9')).toBe('sqrt(4)+sqrt(9)');
+  });
+
+  it('preserves existing sqrt() calls', () => {
+    expect(preprocessRootOperators('sqrt(25)')).toBe('sqrt(25)');
+  });
+
+  it('handles √ with decimal number', () => {
+    expect(preprocessRootOperators('√2.5')).toBe('sqrt(2.5)');
+  });
+
+  it('handles empty string', () => {
+    expect(preprocessRootOperators('')).toBe('');
+  });
+
+  it('handles expression without root symbols', () => {
+    expect(preprocessRootOperators('2+3*4')).toBe('2+3*4');
+  });
+});
+
+describe('evaluateExpression with root prefix operators', () => {
+  it('evaluates √25', () => {
+    expect(evaluateExpression('√25', 'DEG')).toBe('5');
+  });
+
+  it('evaluates ∛8', () => {
+    expect(evaluateExpression('∛8', 'DEG')).toBe('2');
+  });
+
+  it('evaluates √(25+3)', () => {
+    const result = parseFloat(evaluateExpression('√(25+3)', 'DEG'));
+    expect(result).toBeCloseTo(Math.sqrt(28), 10);
+  });
+
+  it('evaluates √25+3 as sqrt(25)+3', () => {
+    expect(evaluateExpression('√25+3', 'DEG')).toBe('8');
+  });
+
+  it('evaluates 2*√9', () => {
+    expect(evaluateExpression('2*√9', 'DEG')).toBe('6');
+  });
+
+  it('evaluates √√16', () => {
+    expect(evaluateExpression('√√16', 'DEG')).toBe('2');
+  });
+
+  it('evaluates √pi', () => {
+    const result = parseFloat(evaluateExpression('√pi', 'DEG'));
+    expect(result).toBeCloseTo(Math.sqrt(Math.PI), 10);
   });
 });

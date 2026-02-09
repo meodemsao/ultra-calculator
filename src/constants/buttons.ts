@@ -52,7 +52,7 @@ export const scientificButtons: ButtonConfig[] = [
   { label: 'log', value: 'log10(', type: 'function', secondLabel: '10ˣ', secondValue: '10^' },
 
   { label: 'ln', value: 'log(', type: 'function', secondLabel: 'eˣ', secondValue: 'e^' },
-  { label: '√', value: 'sqrt(', type: 'function', secondLabel: '∛', secondValue: 'cbrt(' },
+  { label: '√', value: '√', type: 'function', secondLabel: '∛', secondValue: '∛' },
   { label: 'x²', value: '^2', type: 'function', secondLabel: 'x³', secondValue: '^3' },
   { label: 'xʸ', value: '^', type: 'function' },
 

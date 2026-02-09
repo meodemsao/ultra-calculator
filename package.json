@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "deploy": "./scripts/deploy-cloudflare.sh",
     "deploy:preview": "./scripts/deploy-cloudflare.sh preview",
     "pages:deploy": "wrangler pages deploy dist --project-name calculator-ultra"
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
