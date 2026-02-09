@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy": "./scripts/deploy-cloudflare.sh",
+    "deploy:preview": "./scripts/deploy-cloudflare.sh preview",
+    "pages:deploy": "wrangler pages deploy dist --project-name calculator-ultra"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
@@ -41,6 +44,7 @@
     "vite": "^5.1.0",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.18",
-    "workbox-window": "^7.4.0"
+    "workbox-window": "^7.4.0",
+    "wrangler": "^4.63.0"
   }
 }
