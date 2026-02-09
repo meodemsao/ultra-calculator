@@ -1,0 +1,69 @@
+{
+    "name": "Calculator Ultra",
+    "short_name": "CalcUltra",
+    "description": "A powerful scientific calculator with graphing, statistics, programming, and financial modes",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1f2937",
+    "theme_color": "#6366f1",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "productivity",
+        "utilities",
+        "education"
+    ],
+    "shortcuts": [
+        {
+            "name": "Scientific Mode",
+            "short_name": "Scientific",
+            "description": "Open in scientific calculator mode",
+            "url": "/?mode=scientific",
+            "icons": [
+                {
+                    "src": "/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Graphing Mode",
+            "short_name": "Graph",
+            "description": "Open in graphing mode",
+            "url": "/?mode=graph",
+            "icons": [
+                {
+                    "src": "/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/screenshot-mobile.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ]
+}

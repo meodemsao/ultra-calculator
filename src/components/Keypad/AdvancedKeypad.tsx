@@ -367,7 +367,13 @@ export function AdvancedKeypad() {
                 <X size={20} />
               </button>
             </div>
-            <MatrixInput onClose={closeModal} />
+            <MatrixInput
+              onClose={closeModal}
+              onInsert={(value) => {
+                setExpression(state.expression + value);
+                closeModal();
+              }}
+            />
           </Dialog.Panel>
         </div>
       </Dialog>

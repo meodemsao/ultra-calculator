@@ -19,6 +19,128 @@ body {
   min-height: 100vh;
 }
 
+/* Theme CSS Variables */
+:root,
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --border: #d1d5db;
+  --button-bg: #f9fafb;
+  --button-hover: #e5e7eb;
+  --button-number: #ffffff;
+  --button-operator: #eef2ff;
+  --button-equal: #6366f1;
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --bg-tertiary: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #6b7280;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --border: #374151;
+  --button-bg: #374151;
+  --button-hover: #4b5563;
+  --button-number: #1f2937;
+  --button-operator: #312e81;
+  --button-equal: #6366f1;
+  --success: #34d399;
+  --error: #f87171;
+}
+
+[data-theme="amoled"] {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #171717;
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+  --accent: #a855f7;
+  --accent-hover: #9333ea;
+  --border: #262626;
+  --button-bg: #171717;
+  --button-hover: #262626;
+  --button-number: #0a0a0a;
+  --button-operator: #3b0764;
+  --button-equal: #9333ea;
+  --success: #22c55e;
+  --error: #ef4444;
+}
+
+[data-theme="solarized"] {
+  --bg-primary: #002b36;
+  --bg-secondary: #073642;
+  --bg-tertiary: #094049;
+  --text-primary: #fdf6e3;
+  --text-secondary: #93a1a1;
+  --text-muted: #586e75;
+  --accent: #b58900;
+  --accent-hover: #cb4b16;
+  --border: #094049;
+  --button-bg: #073642;
+  --button-hover: #094049;
+  --button-number: #002b36;
+  --button-operator: #1a4a5e;
+  --button-equal: #b58900;
+  --success: #859900;
+  --error: #dc322f;
+}
+
+[data-theme="high-contrast"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #333333;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --text-muted: #cccccc;
+  --accent: #ffff00;
+  --accent-hover: #ffcc00;
+  --border: #ffffff;
+  --button-bg: #000000;
+  --button-hover: #333333;
+  --button-number: #1a1a1a;
+  --button-operator: #003366;
+  --button-equal: #ffff00;
+  --success: #00ff00;
+  --error: #ff0000;
+}
+
+[data-theme="retro"] {
+  --bg-primary: #c4cfa1;
+  --bg-secondary: #9ba17e;
+  --bg-tertiary: #7d8463;
+  --text-primary: #2d3220;
+  --text-secondary: #3d4430;
+  --text-muted: #5d6450;
+  --accent: #4a5530;
+  --accent-hover: #3d4725;
+  --border: #7d8463;
+  --button-bg: #b4bf91;
+  --button-hover: #a4af81;
+  --button-number: #c4cfa1;
+  --button-operator: #8d9871;
+  --button-equal: #4a5530;
+  --success: #5d7030;
+  --error: #8b4513;
+}
+
+/* Apply theme variables */
+[data-theme] {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
 @layer utilities {
   .btn-press {
     @apply transition-transform active:scale-95;
@@ -48,4 +170,78 @@ body {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Landscape Layout Optimization (Task 10.7) */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+
+  /* Compact mode for landscape on mobile */
+  .calculator-container {
+    padding: 0.5rem;
+  }
+
+  .calculator-display {
+    padding: 0.5rem;
+    min-height: 60px;
+  }
+
+  .calculator-display .expression {
+    font-size: 0.875rem;
+  }
+
+  .calculator-display .result {
+    font-size: 1.5rem;
+  }
+
+  .calculator-keypad {
+    gap: 0.25rem;
+  }
+
+  .calculator-keypad button {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 36px;
+  }
+}
+
+/* Medium landscape screens */
+@media screen and (orientation: landscape) and (min-height: 501px) and (max-height: 700px) {
+  .calculator-container {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .calculator-main {
+    flex: 1;
+  }
+
+  .calculator-history {
+    width: 300px;
+    max-height: 100%;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  z-index: 100;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
 }

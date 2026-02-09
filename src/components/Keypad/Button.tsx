@@ -7,9 +7,10 @@ interface ButtonProps {
   variant?: 'number' | 'operator' | 'function' | 'action' | 'equal' | 'memory';
   className?: string;
   active?: boolean;
+  ariaLabel?: string;
 }
 
-export function Button({ label, onClick, variant = 'number', className, active }: ButtonProps) {
+export function Button({ label, onClick, variant = 'number', className, active, ariaLabel }: ButtonProps) {
   const baseStyles = 'btn-press font-medium rounded-xl text-lg flex items-center justify-center transition-all duration-150 select-none';
 
   const variantStyles = {
@@ -28,6 +29,7 @@ export function Button({ label, onClick, variant = 'number', className, active }
       type="button"
       onClick={onClick}
       className={twMerge(clsx(baseStyles, variantStyles[variant], activeStyles, className))}
+      aria-label={ariaLabel || label}
     >
       {label}
     </button>

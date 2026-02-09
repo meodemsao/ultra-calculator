@@ -98,20 +98,20 @@
 
 ## 10. UX Polish (Change 10)
 
-- [ ] 10.1 Extend ThemeContext with 4-6 themes (AMOLED black, solarized, high contrast, retro)
-- [ ] 10.2 Create theme selector UI
-- [ ] 10.3 Remove 100-entry history cap, implement unlimited history
-- [ ] 10.4 Add search/filter in history sidebar
-- [ ] 10.5 Add export history as CSV/JSON
-- [ ] 10.6 Add full ARIA labels and focus management across all components
-- [ ] 10.7 Implement landscape layout optimization
-- [ ] 10.8 Add keyboard navigation for all modes
+- [x] 10.1 Extend ThemeContext with 4-6 themes (AMOLED black, solarized, high contrast, retro)
+- [x] 10.2 Create theme selector UI
+- [x] 10.3 Remove 100-entry history cap, implement unlimited history
+- [x] 10.4 Add search/filter in history sidebar
+- [x] 10.5 Add export history as CSV/JSON
+- [x] 10.6 Add full ARIA labels and focus management across all components
+- [x] 10.7 Implement landscape layout optimization
+- [x] 10.8 Add keyboard navigation for all modes
 
 ## 11. PWA Support (Change 11)
 
-- [ ] 11.1 Add web app manifest (public/manifest.json)
-- [ ] 11.2 Implement service worker for offline caching
-- [ ] 11.3 Configure vite-plugin-pwa or equivalent
-- [ ] 11.4 Add haptic feedback on button press (mobile)
-- [ ] 11.5 Implement swipe gestures for mode switching (mobile)
-- [ ] 11.6 Test PWA installability and offline functionality
+- [x] 11.1 Add web app manifest (public/manifest.json)
+- [x] 11.2 Implement service worker for offline caching
+- [x] 11.3 Configure vite-plugin-pwa or equivalent
+- [x] 11.4 Add haptic feedback on button press (mobile)
+- [x] 11.5 Implement swipe gestures for mode switching (mobile)
+- [x] 11.6 Test PWA installability and offline functionality

@@ -28,7 +28,7 @@ interface CalculatorContextType {
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
 
 const HISTORY_KEY = 'calculator-history';
-const MAX_HISTORY = 100;
+const MAX_HISTORY_STORAGE = 500; // Limit for localStorage only, not in-memory
 
 function loadHistory(): HistoryEntry[] {
   try {
@@ -40,7 +40,8 @@ function loadHistory(): HistoryEntry[] {
 }
 
 function saveHistory(history: HistoryEntry[]) {
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY)));
+  // Only save the most recent entries to localStorage to prevent excessive storage
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY_STORAGE)));
 }
 
 const initialState: CalculatorState = {
@@ -132,7 +133,8 @@ function calculatorReducer(state: CalculatorState, action: CalculatorAction): Ca
           result: formattedResult,
           timestamp: Date.now(),
         };
-        const newHistory = [historyEntry, ...state.history].slice(0, MAX_HISTORY);
+        // No cap on in-memory history - unlimited entries
+        const newHistory = [historyEntry, ...state.history];
         saveHistory(newHistory);
         return {
           ...state,
