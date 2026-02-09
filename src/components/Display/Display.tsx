@@ -1,5 +1,6 @@
 import { useCalculator } from '../../contexts/CalculatorContext';
 import { evaluateExpression, formatResult, toFraction } from '../../utils/mathOperations';
+import { formatExpression } from '../../utils/formatExpression';
 import { AlertCircle, Copy, ClipboardPaste } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -91,7 +92,7 @@ export function Display() {
 
       {/* Expression */}
       <div className="text-right text-gray-600 dark:text-gray-400 text-lg min-h-[1.75rem] break-all font-mono">
-        {expression || '\u00A0'}
+        {expression ? formatExpression(expression) : '\u00A0'}
       </div>
 
       {/* Result */}
