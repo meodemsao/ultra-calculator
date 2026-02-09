@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 
 interface ButtonProps {
   label: string;
@@ -8,9 +9,20 @@ interface ButtonProps {
   className?: string;
   active?: boolean;
   ariaLabel?: string;
+  haptic?: boolean; // Enable haptic feedback on press
 }
 
-export function Button({ label, onClick, variant = 'number', className, active, ariaLabel }: ButtonProps) {
+export function Button({
+  label,
+  onClick,
+  variant = 'number',
+  className,
+  active,
+  ariaLabel,
+  haptic = true // Haptic enabled by default
+}: ButtonProps) {
+  const { lightTap, mediumTap } = useHapticFeedback();
+
   const baseStyles = 'btn-press font-medium rounded-xl text-lg flex items-center justify-center transition-all duration-150 select-none';
 
   const variantStyles = {
@@ -24,10 +36,22 @@ export function Button({ label, onClick, variant = 'number', className, active, 
 
   const activeStyles = active ? 'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-900' : '';
 
+  const handleClick = () => {
+    if (haptic) {
+      // Use medium tap for equal button, light tap for others
+      if (variant === 'equal') {
+        mediumTap();
+      } else {
+        lightTap();
+      }
+    }
+    onClick();
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={twMerge(clsx(baseStyles, variantStyles[variant], activeStyles, className))}
       aria-label={ariaLabel || label}
     >
