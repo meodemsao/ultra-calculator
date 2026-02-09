@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { math } from '../../utils/mathOperations';
-import { useCalculator } from '../../contexts/CalculatorContext';
 
 interface MatrixInputProps {
   onClose: () => void;
+  onInsert: (value: string) => void;
 }
 
-export function MatrixInput({ onClose }: MatrixInputProps) {
-  const { setExpression, state } = useCalculator();
+export function MatrixInput({ onClose, onInsert }: MatrixInputProps) {
   const [rows, setRows] = useState(2);
   const [cols, setCols] = useState(2);
   const [matrixA, setMatrixA] = useState<number[][]>([[1, 2], [3, 4]]);
@@ -90,15 +89,15 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
 
   const insertResult = () => {
     if (result) {
-      setExpression(state.expression + result);
+      onInsert(result);
       onClose();
     }
   };
 
   const renderMatrix = (matrix: number[][], matrixName: 'A' | 'B') => (
     <div className="space-y-2">
-      <h4 className="font-medium text-gray-700 dark:text-gray-300">Matrix {matrixName}</h4>
-      <div className="inline-block border-l-2 border-r-2 border-gray-400 dark:border-gray-500 px-2">
+      <h4 className="font-medium text-content-sec">Matrix {matrixName}</h4>
+      <div className="inline-block border-l-2 border-r-2 border-content-muted px-2">
         {matrix.map((row, i) => (
           <div key={i} className="flex gap-1 my-1">
             {row.map((cell, j) => (
@@ -107,7 +106,7 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
                 type="number"
                 value={cell}
                 onChange={(e) => updateCell(matrixName, i, j, e.target.value)}
-                className="w-16 px-2 py-1 text-center border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-16 px-2 py-1 text-center border border-edge rounded bg-surface-sec text-content-pri focus:ring-2 focus:ring-accent focus:border-transparent"
               />
             ))}
           </div>
@@ -120,7 +119,7 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
     <div className="space-y-4">
       {/* Size controls */}
       <div className="flex items-center gap-4">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Size:</label>
+        <label className="text-sm font-medium text-content-sec">Size:</label>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -128,24 +127,24 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
             max="5"
             value={rows}
             onChange={(e) => updateMatrixSize(parseInt(e.target.value) || 2, cols)}
-            className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-16 px-2 py-1 border border-edge rounded bg-surface-sec text-content-pri"
           />
-          <span className="text-gray-500">×</span>
+          <span className="text-content-muted">&times;</span>
           <input
             type="number"
             min="1"
             max="5"
             value={cols}
             onChange={(e) => updateMatrixSize(rows, parseInt(e.target.value) || 2)}
-            className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-16 px-2 py-1 border border-edge rounded bg-surface-sec text-content-pri"
           />
         </div>
-        <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+        <label className="flex items-center gap-2 text-sm text-content-sec">
           <input
             type="checkbox"
             checked={showMatrixB}
             onChange={(e) => setShowMatrixB(e.target.checked)}
-            className="rounded border-gray-300 dark:border-gray-600"
+            className="rounded border-edge"
           />
           Two matrices
         </label>
@@ -159,29 +158,29 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
 
       {/* Operations */}
       <div className="space-y-2">
-        <h4 className="font-medium text-gray-700 dark:text-gray-300">Operations</h4>
+        <h4 className="font-medium text-content-sec">Operations</h4>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => performOperation('det')}
-            className="px-3 py-1.5 bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 rounded-lg hover:bg-violet-200 dark:hover:bg-violet-800/50 text-sm font-medium"
+            className="px-3 py-1.5 bg-fn-subtle text-fn-on rounded-lg hover:bg-fn-subtle/80 text-sm font-medium"
           >
             Determinant
           </button>
           <button
             onClick={() => performOperation('inv')}
-            className="px-3 py-1.5 bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 rounded-lg hover:bg-violet-200 dark:hover:bg-violet-800/50 text-sm font-medium"
+            className="px-3 py-1.5 bg-fn-subtle text-fn-on rounded-lg hover:bg-fn-subtle/80 text-sm font-medium"
           >
             Inverse
           </button>
           <button
             onClick={() => performOperation('transpose')}
-            className="px-3 py-1.5 bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 rounded-lg hover:bg-violet-200 dark:hover:bg-violet-800/50 text-sm font-medium"
+            className="px-3 py-1.5 bg-fn-subtle text-fn-on rounded-lg hover:bg-fn-subtle/80 text-sm font-medium"
           >
             Transpose
           </button>
           <button
             onClick={() => performOperation('eigenvalues')}
-            className="px-3 py-1.5 bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 rounded-lg hover:bg-violet-200 dark:hover:bg-violet-800/50 text-sm font-medium"
+            className="px-3 py-1.5 bg-fn-subtle text-fn-on rounded-lg hover:bg-fn-subtle/80 text-sm font-medium"
           >
             Eigenvalues
           </button>
@@ -189,19 +188,19 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
             <>
               <button
                 onClick={() => performOperation('add')}
-                className="px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 text-sm font-medium"
+                className="px-3 py-1.5 bg-accent-subtle text-accent-on rounded-lg hover:bg-accent-subtle/80 text-sm font-medium"
               >
                 A + B
               </button>
               <button
                 onClick={() => performOperation('subtract')}
-                className="px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 text-sm font-medium"
+                className="px-3 py-1.5 bg-accent-subtle text-accent-on rounded-lg hover:bg-accent-subtle/80 text-sm font-medium"
               >
                 A − B
               </button>
               <button
                 onClick={() => performOperation('multiply')}
-                className="px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 text-sm font-medium"
+                className="px-3 py-1.5 bg-accent-subtle text-accent-on rounded-lg hover:bg-accent-subtle/80 text-sm font-medium"
               >
                 A × B
               </button>
@@ -213,13 +212,13 @@ export function MatrixInput({ onClose }: MatrixInputProps) {
       {/* Result */}
       {result && (
         <div className="space-y-2">
-          <h4 className="font-medium text-gray-700 dark:text-gray-300">Result</h4>
-          <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg font-mono text-gray-900 dark:text-white whitespace-pre-wrap">
+          <h4 className="font-medium text-content-sec">Result</h4>
+          <div className="p-3 bg-surface-sec rounded-lg font-mono text-content-pri whitespace-pre-wrap">
             {result}
           </div>
           <button
             onClick={insertResult}
-            className="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+            className="w-full py-2 bg-accent text-white rounded-lg hover:bg-accent-hv transition-colors font-medium"
           >
             Insert into Expression
           </button>

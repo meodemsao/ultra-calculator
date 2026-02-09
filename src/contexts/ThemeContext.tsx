@@ -1,39 +1,41 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark';
+const THEMES = ['light', 'dark', 'amoled', 'solarized', 'high-contrast', 'retro'] as const;
+export type Theme = (typeof THEMES)[number];
 
 interface ThemeContextType {
   theme: Theme;
+  setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem('calculator-theme');
-    if (stored === 'light' || stored === 'dark') {
-      return stored;
+    if (stored && THEMES.includes(stored as Theme)) {
+      return stored as Theme;
     }
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('calculator-theme', theme);
   }, [theme]);
 
+  const setTheme = (t: Theme) => setThemeState(t);
+
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setThemeState((prev) => {
+      const idx = THEMES.indexOf(prev);
+      return THEMES[(idx + 1) % THEMES.length];
+    });
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

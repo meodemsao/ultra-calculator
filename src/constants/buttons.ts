@@ -77,4 +77,8 @@ export const advancedButtons: ButtonConfig[] = [
   { label: '∫', value: 'integral', type: 'action' },
   { label: 'Matrix', value: 'matrix', type: 'action' },
   { label: 'a+bi', value: 'complex', type: 'action' },
+  { label: 'Vectors', value: 'vectors', type: 'action' },
+  { label: 'lim', value: 'limits', type: 'action' },
+  { label: 'Taylor', value: 'taylor', type: 'action' },
+  { label: 'f(x)', value: 'userfunc', type: 'action' },
 ];

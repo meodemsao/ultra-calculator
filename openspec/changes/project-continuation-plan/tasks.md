@@ -77,23 +77,24 @@
 
 ## 8. Financial Mode (Change 8)
 
-- [ ] 8.1 Create financialCalc.ts utility (TVM solver, compound interest)
-- [ ] 8.2 Create FinancialCalc component with TVM input fields
-- [ ] 8.3 Implement TVM solver (solve for N, I%, PV, PMT, FV)
-- [ ] 8.4 Implement amortization schedule table
-- [ ] 8.5 Implement compound interest calculator
-- [ ] 8.6 Replace "Coming soon" placeholder with FinancialCalc in Calculator.tsx
-- [ ] 8.7 Add tests for financial calculations
+- [x] 8.1 Create financialCalc.ts utility (TVM solver, compound interest)
+- [x] 8.2 Create FinancialCalc component with TVM input fields
+- [x] 8.3 Implement TVM solver (solve for N, I%, PV, PMT, FV)
+- [x] 8.4 Implement amortization schedule table
+- [x] 8.5 Implement compound interest calculator
+- [x] 8.6 Replace "Coming soon" placeholder with FinancialCalc in Calculator.tsx
+- [x] 8.7 Add tests for financial calculations
+
 
 ## 9. Advanced Math Extensions (Change 9)
 
-- [ ] 9.1 Implement symbolic integration display in AdvancedKeypad
-- [ ] 9.2 Create limits.ts utility for limit computation
-- [ ] 9.3 Implement Taylor/Maclaurin series expansion
-- [ ] 9.4 Create vectors.ts utility (dot product, cross product, magnitude)
-- [ ] 9.5 Add vector operations UI in AdvancedKeypad
-- [ ] 9.6 Implement user-defined functions (define, save to localStorage, recall)
-- [ ] 9.7 Add tests for limits, Taylor series, vectors, user functions
+- [x] 9.1 Implement symbolic integration display in AdvancedKeypad
+- [x] 9.2 Create limits.ts utility for limit computation
+- [x] 9.3 Implement Taylor/Maclaurin series expansion
+- [x] 9.4 Create vectors.ts utility (dot product, cross product, magnitude)
+- [x] 9.5 Add vector operations UI in AdvancedKeypad
+- [x] 9.6 Implement user-defined functions (define, save to localStorage, recall)
+- [x] 9.7 Add tests for limits, Taylor series, vectors, user functions
 
 ## 10. UX Polish (Change 10)
 
