@@ -4,6 +4,8 @@
  *
  * Note: √ and ∛ are already stored as Unicode symbols in the expression
  * (they are prefix operators, not function calls).
+ * Note: ! is already stored as postfix operator in the expression.
+ * The factorial( replacement handles old history entries.
  *
  * Order matters: log10 must be replaced before log to avoid partial matching.
  */
@@ -11,5 +13,6 @@ export function formatExpression(expr: string): string {
   return expr
     .replace(/log10\(/g, 'log₁₀(')
     .replace(/log\(/g, 'ln(')
-    .replace(/nthRoot\(/g, 'ⁿ√(');
+    .replace(/nthRoot\(/g, 'ⁿ√(')
+    .replace(/factorial\(([^)]+)\)/g, '$1!');
 }

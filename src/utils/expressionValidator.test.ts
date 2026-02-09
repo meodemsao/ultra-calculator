@@ -272,4 +272,63 @@ describe('sanitizeInput', () => {
       expect(sanitizeInput('(', '√')).toBe('√');
     });
   });
+
+  // Factorial postfix operator (!)
+  describe('Factorial postfix operator (!)', () => {
+    it('allows ! after digit', () => {
+      expect(sanitizeInput('5', '!')).toBe('!');
+    });
+
+    it('allows ! after )', () => {
+      expect(sanitizeInput('(3+2)', '!')).toBe('!');
+    });
+
+    it('allows ! after constant pi', () => {
+      expect(sanitizeInput('pi', '!')).toBe('!');
+    });
+
+    it('allows ! after constant e', () => {
+      expect(sanitizeInput('e', '!')).toBe('!');
+    });
+
+    it('allows chained !! (double factorial)', () => {
+      expect(sanitizeInput('5!', '!')).toBe('!');
+    });
+
+    it('blocks ! at start', () => {
+      expect(sanitizeInput('', '!')).toBe(null);
+    });
+
+    it('blocks ! after operator', () => {
+      expect(sanitizeInput('3+', '!')).toBe(null);
+    });
+
+    it('blocks ! after (', () => {
+      expect(sanitizeInput('(', '!')).toBe(null);
+    });
+
+    it('inserts * between ! and digit', () => {
+      expect(sanitizeInput('5!', '3')).toBe('*3');
+    });
+
+    it('inserts * between ! and constant', () => {
+      expect(sanitizeInput('5!', 'pi')).toBe('*pi');
+    });
+
+    it('inserts * between ! and function', () => {
+      expect(sanitizeInput('5!', 'sin(')).toBe('*sin(');
+    });
+
+    it('inserts * between ! and (', () => {
+      expect(sanitizeInput('5!', '(')).toBe('*(');
+    });
+
+    it('inserts * between ! and √', () => {
+      expect(sanitizeInput('5!', '√')).toBe('*√');
+    });
+
+    it('allows operator after !', () => {
+      expect(sanitizeInput('5!', '+')).toBe('+');
+    });
+  });
 });

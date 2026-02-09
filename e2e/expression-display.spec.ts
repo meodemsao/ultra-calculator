@@ -236,4 +236,60 @@ test.describe('Expression Display Formatting', () => {
     const expr = await getExpression(page);
     expect(expr).toBe('ⁿ√(32');
   });
+
+  // --- ! as postfix operator ---
+
+  test('! inserts as postfix after digit', async ({ page }) => {
+    await clickButton(page, '5');
+    await clickButton(page, 'n!');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('5!');
+  });
+
+  test('5! evaluates to 120', async ({ page }) => {
+    await clickButton(page, '5');
+    await clickButton(page, 'n!');
+    await clickButton(page, '=');
+
+    const result = await getResult(page);
+    expect(result).toBe('120');
+  });
+
+  test('! works after parenthesized expression', async ({ page }) => {
+    await clickButton(page, '(');
+    await clickButton(page, '3');
+    await clickButton(page, '+');
+    await clickButton(page, '2');
+    await clickButton(page, ')');
+    await clickButton(page, 'n!');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('(3+2)!');
+  });
+
+  test('(3+2)! evaluates to 120', async ({ page }) => {
+    await clickButton(page, '(');
+    await clickButton(page, '3');
+    await clickButton(page, '+');
+    await clickButton(page, '2');
+    await clickButton(page, ')');
+    await clickButton(page, 'n!');
+    await clickButton(page, '=');
+
+    const result = await getResult(page);
+    expect(result).toBe('120');
+  });
+
+  test('3!+4! evaluates to 30', async ({ page }) => {
+    await clickButton(page, '3');
+    await clickButton(page, 'n!');
+    await clickButton(page, '+');
+    await clickButton(page, '4');
+    await clickButton(page, 'n!');
+    await clickButton(page, '=');
+
+    const result = await getResult(page);
+    expect(result).toBe('30');
+  });
 });

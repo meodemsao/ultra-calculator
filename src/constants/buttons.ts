@@ -57,7 +57,7 @@ export const scientificButtons: ButtonConfig[] = [
   { label: 'xʸ', value: '^', type: 'function' },
 
   { label: '|x|', value: 'abs(', type: 'function' },
-  { label: 'n!', value: 'factorial(', type: 'function' },
+  { label: 'n!', value: '!', type: 'function' },
   { label: 'π', value: 'pi', type: 'function' },
   { label: 'e', value: 'e', type: 'function' },
 

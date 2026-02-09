@@ -38,6 +38,20 @@ describe('formatExpression', () => {
     });
   });
 
+  describe('factorial postfix operator', () => {
+    it('preserves ! as-is', () => {
+      expect(formatExpression('5!')).toBe('5!');
+    });
+
+    it('converts old factorial(N) to N! for history', () => {
+      expect(formatExpression('factorial(5)')).toBe('5!');
+    });
+
+    it('converts factorial with expression', () => {
+      expect(formatExpression('factorial(10)')).toBe('10!');
+    });
+  });
+
   describe('multiple functions', () => {
     it('replaces multiple log instances', () => {
       expect(formatExpression('log10(4)+log10(9)')).toBe('log₁₀(4)+log₁₀(9)');

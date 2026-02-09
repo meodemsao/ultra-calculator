@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateExpression, formatResult, toFraction, preprocessRootOperators } from './mathOperations';
+import { evaluateExpression, formatResult, toFraction, preprocessRootOperators, preprocessFactorialOperator } from './mathOperations';
 
 describe('evaluateExpression', () => {
   describe('basic arithmetic', () => {
@@ -429,6 +429,86 @@ describe('preprocessRootOperators', () => {
 
   it('handles expression without root symbols', () => {
     expect(preprocessRootOperators('2+3*4')).toBe('2+3*4');
+  });
+});
+
+describe('preprocessFactorialOperator', () => {
+  it('converts number!', () => {
+    expect(preprocessFactorialOperator('5!')).toBe('factorial(5)');
+  });
+
+  it('converts parenthesized group!', () => {
+    expect(preprocessFactorialOperator('(3+2)!')).toBe('factorial((3+2))');
+  });
+
+  it('converts constant pi!', () => {
+    expect(preprocessFactorialOperator('pi!')).toBe('factorial(pi)');
+  });
+
+  it('converts constant e!', () => {
+    expect(preprocessFactorialOperator('e!')).toBe('factorial(e)');
+  });
+
+  it('converts double factorial (chained)', () => {
+    expect(preprocessFactorialOperator('5!!')).toBe('factorial(factorial(5))');
+  });
+
+  it('preserves operators after factorial', () => {
+    expect(preprocessFactorialOperator('5!+3')).toBe('factorial(5)+3');
+  });
+
+  it('handles multiplication with factorial', () => {
+    expect(preprocessFactorialOperator('2*5!')).toBe('2*factorial(5)');
+  });
+
+  it('handles multiple factorial operators', () => {
+    expect(preprocessFactorialOperator('3!+4!')).toBe('factorial(3)+factorial(4)');
+  });
+
+  it('preserves existing factorial() calls', () => {
+    expect(preprocessFactorialOperator('factorial(5)')).toBe('factorial(5)');
+  });
+
+  it('handles decimal number!', () => {
+    expect(preprocessFactorialOperator('5.5!')).toBe('factorial(5.5)');
+  });
+
+  it('handles empty string', () => {
+    expect(preprocessFactorialOperator('')).toBe('');
+  });
+
+  it('handles expression without factorial', () => {
+    expect(preprocessFactorialOperator('2+3*4')).toBe('2+3*4');
+  });
+
+  it('handles nested parentheses', () => {
+    expect(preprocessFactorialOperator('((2+3))!')).toBe('factorial(((2+3)))');
+  });
+});
+
+describe('evaluateExpression with factorial postfix operator', () => {
+  it('evaluates 5!', () => {
+    expect(evaluateExpression('5!', 'DEG')).toBe('120');
+  });
+
+  it('evaluates 0!', () => {
+    expect(evaluateExpression('0!', 'DEG')).toBe('1');
+  });
+
+  it('evaluates (3+2)!', () => {
+    expect(evaluateExpression('(3+2)!', 'DEG')).toBe('120');
+  });
+
+  it('evaluates 5!+3', () => {
+    expect(evaluateExpression('5!+3', 'DEG')).toBe('123');
+  });
+
+  it('evaluates 2*3!', () => {
+    expect(evaluateExpression('2*3!', 'DEG')).toBe('12');
+  });
+
+  it('evaluates 3!+4!', () => {
+    expect(evaluateExpression('3!+4!', 'DEG')).toBe('30');
   });
 });
 

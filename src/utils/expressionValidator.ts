@@ -6,7 +6,7 @@ const FUNCTIONS = [
   'sinh(', 'cosh(', 'tanh(',
   'asinh(', 'acosh(', 'atanh(',
   'log(', 'log10(',
-  'abs(', 'factorial(',
+  'abs(',
   'exp(', 'nthRoot(',
   'permutations(', 'combinations(',
   'gcd(', 'lcm(',
@@ -15,6 +15,7 @@ const FUNCTIONS = [
 ];
 const CONSTANTS = ['pi', 'e'];
 const ROOT_PREFIXES = ['√', '∛'];
+const POSTFIX_OPERATORS = ['!'];
 
 function isDigit(ch: string): boolean {
   return ch >= '0' && ch <= '9';
@@ -59,6 +60,16 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
   const isNewConstant = CONSTANTS.includes(newInput);
   const isNewMod = newInput === ' mod ';
   const isNewRootPrefix = ROOT_PREFIXES.includes(newInput);
+  const isNewPostfix = POSTFIX_OPERATORS.includes(newInput);
+
+  // Rule 12: Postfix operators (!) — allowed after digits, ), and constants
+  if (isNewPostfix) {
+    if (expr === '') return null;
+    if (isDigit(lastChar) || lastChar === ')' || endsWithConstant(expr) || lastChar === '!') {
+      return newInput;
+    }
+    return null;
+  }
 
   // Rule 5: Prevent strict binary operator at start (*, /, ^, %)
   if (expr === '' && newInput.length === 1 && isStrictBinaryOperator(newInput)) {
@@ -126,13 +137,13 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
 
   // Rule 1: Implicit multiplication before (
   if (isNewOpenParen) {
-    if (lastChar !== '' && (isDigit(lastChar) || lastChar === ')' || endsWithConstant(expr))) {
+    if (lastChar !== '' && (isDigit(lastChar) || lastChar === ')' || lastChar === '!' || endsWithConstant(expr))) {
       return '*' + newInput;
     }
   }
 
-  // Rule 2: Implicit multiplication after )
-  if (lastChar === ')') {
+  // Rule 2: Implicit multiplication after ) and postfix operators (!)
+  if (lastChar === ')' || lastChar === '!') {
     if (isNewDigit || isNewConstant) {
       return '*' + newInput;
     }
@@ -144,14 +155,14 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
 
   // Rule 10: Implicit multiplication before functions and root prefixes
   if (isNewFunction || isNewRootPrefix) {
-    if (lastChar !== '' && (isDigit(lastChar) || endsWithConstant(expr))) {
+    if (lastChar !== '' && (isDigit(lastChar) || lastChar === '!' || endsWithConstant(expr))) {
       return '*' + newInput;
     }
   }
 
   // Rule 11: Implicit multiplication before constants
   if (isNewConstant) {
-    if (lastChar !== '' && (isDigit(lastChar) || lastChar === ')')) {
+    if (lastChar !== '' && (isDigit(lastChar) || lastChar === ')' || lastChar === '!')) {
       return '*' + newInput;
     }
     // Constant after constant: e.g. "pi" + "e" → "pi*e"

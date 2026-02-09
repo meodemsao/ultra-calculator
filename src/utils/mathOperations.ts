@@ -122,6 +122,92 @@ export function preprocessRootOperators(expr: string): string {
   return result;
 }
 
+/**
+ * Extract the preceding "term" ending at position `i` (exclusive) in the expression.
+ * Returns the start index (inclusive) of the term.
+ * Does NOT follow chained `!` — only extracts the base term.
+ *
+ * A term (looking backward) is one of:
+ * 1. A parenthesized group: (...) — find matching open paren, including preceding function name
+ * 2. A constant: pi or e
+ * 3. A number: digits and dots
+ */
+function extractTermStart(expr: string, i: number): number {
+  if (i <= 0) return 0;
+
+  // Look at the character just before position i
+  const ch = expr[i - 1];
+
+  // 1. Parenthesized group ending with )
+  if (ch === ')') {
+    let depth = 1;
+    let j = i - 2;
+    while (j >= 0 && depth > 0) {
+      if (expr[j] === ')') depth++;
+      if (expr[j] === '(') depth--;
+      j--;
+    }
+    // j is now one before the matching '(', so start of parens is j+1
+    let parenStart = j + 1;
+
+    // Check if the parenthesized group is preceded by a function name
+    for (const fn of KNOWN_FUNCTIONS) {
+      if (parenStart >= fn.length && expr.slice(parenStart - fn.length, parenStart) === fn) {
+        parenStart -= fn.length;
+        break;
+      }
+    }
+
+    return parenStart;
+  }
+
+  // 2. Constant: pi or e (check pi first)
+  if (i >= 2 && expr.slice(i - 2, i) === 'pi') {
+    return i - 2;
+  }
+  if (ch === 'e' && (i - 2 < 0 || !/[a-z]/i.test(expr[i - 2]))) {
+    return i - 1;
+  }
+
+  // 3. Number: digits and dots
+  if ((ch >= '0' && ch <= '9') || ch === '.') {
+    let j = i - 1;
+    while (j > 0 && ((expr[j - 1] >= '0' && expr[j - 1] <= '9') || expr[j - 1] === '.')) {
+      j--;
+    }
+    return j;
+  }
+
+  // Fallback: single character
+  return i - 1;
+}
+
+/**
+ * Convert postfix ! operator into factorial(...) function calls.
+ * E.g. "5!" → "factorial(5)", "(3+2)!" → "factorial((3+2))", "5!!" → "factorial(factorial(5))"
+ *
+ * Processes left-to-right: finds each !, wraps its preceding term, then continues.
+ */
+export function preprocessFactorialOperator(expr: string): string {
+  let output = expr;
+  let i = 0;
+  while (i < output.length) {
+    if (output[i] === '!') {
+      const termStart = extractTermStart(output, i);
+      const term = output.slice(termStart, i);
+      const before = output.slice(0, termStart);
+      const after = output.slice(i + 1);
+      const replacement = 'factorial(' + term + ')';
+      output = before + replacement + after;
+      // Position after the replacement (end of 'factorial(term)')
+      i = before.length + replacement.length;
+    } else {
+      i++;
+    }
+  }
+  return output;
+}
+
 export function evaluateExpression(expression: string, angleMode: AngleMode): string {
   try {
     if (!expression.trim()) {
@@ -135,6 +221,9 @@ export function evaluateExpression(expression: string, angleMode: AngleMode): st
 
     // Convert √/∛ prefix operators to sqrt()/cbrt() function calls
     processedExpr = preprocessRootOperators(processedExpr);
+
+    // Convert postfix ! to factorial() function calls
+    processedExpr = preprocessFactorialOperator(processedExpr);
 
     // Handle percentage
     processedExpr = processedExpr.replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');
