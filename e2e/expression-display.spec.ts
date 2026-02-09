@@ -229,6 +229,7 @@ test.describe('Expression Display Formatting', () => {
   // --- nthRoot still uses parentheses ---
 
   test('nthRoot displays as ⁿ√(', async ({ page }) => {
+    await clickButton(page, '2nd');
     await clickButton(page, 'ⁿ√');
     await clickButton(page, '3');
     await clickButton(page, '2');

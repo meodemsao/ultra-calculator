@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CalculatorMode } from '../../types/calculator';
 import { Display } from '../Display/Display';
 import { BasicKeypad } from '../Keypad/BasicKeypad';
-import { ScientificKeypad } from '../Keypad/ScientificKeypad';
+import { CompactScientificKeypad } from '../Keypad/CompactScientificKeypad';
 import { AdvancedKeypad } from '../Keypad/AdvancedKeypad';
 import { UnitConverter } from '../UnitConverter/UnitConverter';
 import { History } from '../History/History';
@@ -56,18 +56,12 @@ export function Calculator() {
             <div className="space-y-3">
               {mode === 'basic' && <BasicKeypad />}
 
-              {mode === 'scientific' && (
-                <>
-                  <ScientificKeypad />
-                  <BasicKeypad />
-                </>
-              )}
+              {mode === 'scientific' && <CompactScientificKeypad />}
 
               {mode === 'advanced' && (
                 <>
                   <AdvancedKeypad />
-                  <ScientificKeypad />
-                  <BasicKeypad />
+                  <CompactScientificKeypad />
                 </>
               )}
 
