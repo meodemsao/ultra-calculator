@@ -199,16 +199,20 @@ export function CompactScientificKeypad() {
     <div className="space-y-1.5">
       {/* Compact 5-column grid (Casio-style) */}
       <div className="grid grid-cols-5 gap-1.5">
-        {compactRows.flat().map((btn, idx) => (
-          <Button
-            key={`${btn.label}-${idx}`}
-            label={getLabel(btn)}
-            variant={getVariant(btn)}
-            onClick={() => handleClick(btn)}
-            active={btn.action === 'shift' && isSecondFunction}
-            className={`h-10 ${getTextClass(btn)}`}
-          />
-        ))}
+        {compactRows.flat().map((btn, idx) => {
+          const row = Math.floor(idx / 5);
+          const heightClass = row >= 5 ? 'h-14' : 'h-10';
+          return (
+            <Button
+              key={`${btn.label}-${idx}`}
+              label={getLabel(btn)}
+              variant={getVariant(btn)}
+              onClick={() => handleClick(btn)}
+              active={btn.action === 'shift' && isSecondFunction}
+              className={`${heightClass} ${getTextClass(btn)}`}
+            />
+          );
+        })}
       </div>
 
       {/* Variable selection dialog */}
