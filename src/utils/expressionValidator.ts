@@ -7,7 +7,7 @@ const FUNCTIONS = [
   'asinh(', 'acosh(', 'atanh(',
   'log(', 'log10(',
   'abs(',
-  'exp(', 'nthRoot(',
+  'exp(',
   'permutations(', 'combinations(',
   'gcd(', 'lcm(',
   'ceil(', 'floor(',
@@ -16,6 +16,7 @@ const FUNCTIONS = [
 const CONSTANTS = ['pi', 'e'];
 const ROOT_PREFIXES = ['√', '∛'];
 const POSTFIX_OPERATORS = ['!'];
+const NTH_ROOT_OPERATOR = 'ⁿ√';
 
 function isDigit(ch: string): boolean {
   return ch >= '0' && ch <= '9';
@@ -61,6 +62,16 @@ export function sanitizeInput(currentExpr: string, newInput: string): string | n
   const isNewMod = newInput === ' mod ';
   const isNewRootPrefix = ROOT_PREFIXES.includes(newInput);
   const isNewPostfix = POSTFIX_OPERATORS.includes(newInput);
+  const isNewNthRoot = newInput === NTH_ROOT_OPERATOR;
+
+  // Rule: ⁿ√ infix operator — only allowed after digits, ), constants, !
+  if (isNewNthRoot) {
+    if (expr === '') return null;
+    if (isDigit(lastChar) || lastChar === ')' || lastChar === '!' || endsWithConstant(expr)) {
+      return newInput;
+    }
+    return null;
+  }
 
   // Rule 12: Postfix operators (!) — allowed after digits, ), and constants
   if (isNewPostfix) {

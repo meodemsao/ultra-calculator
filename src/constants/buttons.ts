@@ -62,7 +62,7 @@ export const scientificButtons: ButtonConfig[] = [
   { label: 'e', value: 'e', type: 'function' },
 
   { label: '1/x', value: '1/(', type: 'function' },
-  { label: 'ⁿ√', value: 'nthRoot(', type: 'function' },
+  { label: 'ⁿ√', value: 'ⁿ√', type: 'function' },
   { label: 'exp', value: 'exp(', type: 'function' },
   { label: 'mod', value: ' mod ', type: 'operator' },
 

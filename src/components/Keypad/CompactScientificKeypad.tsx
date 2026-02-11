@@ -37,7 +37,7 @@ const compactRows: CompactBtn[][] = [
   // Row 3: x², xʸ, √, n!, π
   [
     { label: 'x²', value: '^2', type: 'function', secondLabel: 'x³', secondValue: '^3' },
-    { label: 'xʸ', value: '^', type: 'function', secondLabel: 'ⁿ√', secondValue: 'nthRoot(' },
+    { label: 'xʸ', value: '^', type: 'function', secondLabel: 'ⁿ√', secondValue: 'ⁿ√' },
     { label: '√', value: '√', type: 'function', secondLabel: '∛', secondValue: '∛' },
     { label: 'n!', value: '!', type: 'function', secondLabel: 'mod', secondValue: ' mod ' },
     { label: 'π', value: 'pi', type: 'function', secondLabel: 'e', secondValue: 'e' },

@@ -226,16 +226,17 @@ test.describe('Expression Display Formatting', () => {
     expect(expr).toBe('√4');
   });
 
-  // --- nthRoot still uses parentheses ---
+  // --- ⁿ√ as Casio-style infix operator ---
 
-  test('nthRoot displays as ⁿ√(', async ({ page }) => {
+  test('ⁿ√ inserts as infix operator after digit', async ({ page }) => {
+    await clickButton(page, '3');
     await clickButton(page, '2nd');
     await clickButton(page, 'ⁿ√');
-    await clickButton(page, '3');
     await clickButton(page, '2');
+    await clickButton(page, '7');
 
     const expr = await getExpression(page);
-    expect(expr).toBe('ⁿ√(32');
+    expect(expr).toBe('3ⁿ√27');
   });
 
   // --- ! as postfix operator ---

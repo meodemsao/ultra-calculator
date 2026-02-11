@@ -123,6 +123,41 @@ export function preprocessRootOperators(expr: string): string {
 }
 
 /**
+ * Convert ⁿ√ infix operator into nthRoot(...) function calls.
+ * E.g. "3ⁿ√27" → "nthRoot(27,3)", "(2+1)ⁿ√(8)" → "nthRoot((8),(2+1))"
+ *
+ * Must run BEFORE preprocessRootOperators so that standalone √/∛ are not
+ * confused with the √ inside ⁿ√.
+ */
+export function preprocessNthRootOperator(expr: string): string {
+  const NTH_ROOT = 'ⁿ√';
+  let output = expr;
+  let i = 0;
+  while (i < output.length) {
+    const idx = output.indexOf(NTH_ROOT, i);
+    if (idx === -1) break;
+
+    // Extract index term (before ⁿ√)
+    const indexStart = extractTermStart(output, idx);
+    const indexTerm = output.slice(indexStart, idx);
+
+    // Extract radicand term (after ⁿ√)
+    const radicandStart = idx + NTH_ROOT.length;
+    const radicandEnd = extractTermEnd(output, radicandStart);
+    const radicandTerm = output.slice(radicandStart, radicandEnd);
+
+    // Build replacement: nthRoot(radicand, index)
+    const before = output.slice(0, indexStart);
+    const after = output.slice(radicandEnd);
+    const replacement = `nthRoot(${radicandTerm},${indexTerm})`;
+
+    output = before + replacement + after;
+    i = before.length + replacement.length;
+  }
+  return output;
+}
+
+/**
  * Extract the preceding "term" ending at position `i` (exclusive) in the expression.
  * Returns the start index (inclusive) of the term.
  * Does NOT follow chained `!` — only extracts the base term.
@@ -218,6 +253,9 @@ export function evaluateExpression(expression: string, angleMode: AngleMode): st
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
       .replace(/−/g, '-');
+
+    // Convert ⁿ√ infix operator to nthRoot() (must run before √/∛ preprocessing)
+    processedExpr = preprocessNthRootOperator(processedExpr);
 
     // Convert √/∛ prefix operators to sqrt()/cbrt() function calls
     processedExpr = preprocessRootOperators(processedExpr);
