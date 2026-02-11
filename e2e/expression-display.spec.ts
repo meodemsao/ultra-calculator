@@ -239,6 +239,42 @@ test.describe('Expression Display Formatting', () => {
     expect(expr).toBe('3ⁿ√27');
   });
 
+  // --- Math notation display ---
+
+  test('sin⁻¹ displays with superscript notation', async ({ page }) => {
+    await clickButton(page, '2nd');
+    await clickButton(page, 'sin⁻¹');
+    await clickButton(page, '1');
+    await clickButton(page, ')');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('sin⁻¹(1)');
+  });
+
+  test('π displays as math symbol', async ({ page }) => {
+    await clickButton(page, 'π');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('π');
+  });
+
+  test('x² displays as superscript', async ({ page }) => {
+    await clickButton(page, '5');
+    await clickButton(page, 'x²');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('5²');
+  });
+
+  test('|x| displays for abs', async ({ page }) => {
+    await clickButton(page, '|x|');
+    await clickButton(page, '5');
+    await clickButton(page, ')');
+
+    const expr = await getExpression(page);
+    expect(expr).toBe('|5|');
+  });
+
   // --- ! as postfix operator ---
 
   test('! inserts as postfix after digit', async ({ page }) => {

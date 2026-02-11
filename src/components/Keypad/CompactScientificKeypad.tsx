@@ -96,6 +96,29 @@ const compactRows: CompactBtn[][] = [
 const NO_RESET_TYPES = new Set(['number', 'operator', 'equal']);
 const NO_RESET_ACTIONS = new Set(['shift', 'angle-mode', 'constants', 'spacer', 'clear', 'clear-entry', 'backspace', 'negate', 'sto', 'rcl', 'fraction-toggle']);
 
+/**
+ * Check if the expression has an unclosed instance of a function call.
+ * Walks the expression to find fnName occurrences and tracks paren depth.
+ */
+function hasUnclosedFunction(expr: string, fnName: string): boolean {
+  let i = 0;
+  while (i < expr.length) {
+    const idx = expr.indexOf(fnName, i);
+    if (idx === -1) return false;
+    // Check paren depth from after fnName( to end of expression
+    const start = idx + fnName.length;
+    let depth = 1;
+    for (let j = start; j < expr.length; j++) {
+      if (expr[j] === '(') depth++;
+      if (expr[j] === ')') depth--;
+      if (depth === 0) break;
+    }
+    if (depth > 0) return true; // This abs( is unclosed
+    i = idx + fnName.length;
+  }
+  return false;
+}
+
 export function CompactScientificKeypad() {
   const {
     input, clear, clearEntry, backspace, evaluate,
@@ -148,6 +171,16 @@ export function CompactScientificKeypad() {
       dispatch({ type: 'SET_EXPRESSION', payload: state.expression + rand.toString() });
       autoResetShift(btn);
       return;
+    }
+
+    // Handle bracket-style functions: pressing |x| again closes abs(
+    // Same for ceil/floor if needed in the future
+    if (value === 'abs(') {
+      if (hasUnclosedFunction(state.expression, 'abs(')) {
+        input(')');
+        autoResetShift(btn);
+        return;
+      }
     }
 
     // Default: insert value
