@@ -150,3 +150,5 @@ GEMINI.md
 
 # macOS system files
 .DS_Store
+test-results/
+screenshot/
