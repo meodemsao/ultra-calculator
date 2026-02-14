@@ -66,7 +66,7 @@
 
 ### Try Online
 
-**👉 [calculator-ultra.pages.dev](https://calculator-ultra.pages.dev)**
+**👉 [Live Demo](https://calculator-ultra.pages.dev)**
 
 ### Install as PWA
 

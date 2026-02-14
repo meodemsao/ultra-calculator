@@ -66,7 +66,7 @@
 
 ### Dùng Thử Online
 
-**👉 [calculator-ultra.pages.dev](https://calculator-ultra.pages.dev)**
+**👉 [Dùng Thử Online](https://calculator-ultra.pages.dev)**
 
 ### Cài Đặt PWA
 

@@ -66,7 +66,7 @@
 
 ### 在线体验
 
-**👉 [calculator-ultra.pages.dev](https://calculator-ultra.pages.dev)**
+**👉 [在线演示](https://calculator-ultra.pages.dev)**
 
 ### 安装为PWA
 
